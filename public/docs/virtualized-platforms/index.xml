@@ -1,0 +1,217 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Talos – Virtualized Platforms</title>
+    <link>/docs/virtualized-platforms/</link>
+    <description>Recent content in Virtualized Platforms on Talos</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/virtualized-platforms/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Hyper-V</title>
+      <link>/docs/virtualized-platforms/hyper-v/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/virtualized-platforms/hyper-v/</guid>
+      <description>
+        
+        
+        &lt;p&gt;Talos is known to work on Hyper-V; however, it is currently undocumented.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: KVM</title>
+      <link>/docs/virtualized-platforms/kvm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/virtualized-platforms/kvm/</guid>
+      <description>
+        
+        
+        &lt;p&gt;Talos is known to work on KVM; however, it is currently undocumented.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Proxmox</title>
+      <link>/docs/virtualized-platforms/proxmox/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/virtualized-platforms/proxmox/</guid>
+      <description>
+        
+        
+        &lt;p&gt;Talos is known to work on Proxmox; however, it is currently undocumented.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: VMware</title>
+      <link>/docs/virtualized-platforms/vmware/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/virtualized-platforms/vmware/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;creating-a-cluster-via-the-govc-cli&#34;&gt;Creating a Cluster via the &lt;code&gt;govc&lt;/code&gt; CLI&lt;/h2&gt;
+&lt;p&gt;In this guide we will create an HA Kubernetes cluster with 3 worker nodes.
+We will use the &lt;code&gt;govc&lt;/code&gt; cli which can be downloaded &lt;a href=&#34;https://github.com/vmware/govmomi/tree/master/govc#installation&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h3&gt;
+&lt;p&gt;Prior to starting, it is important to have the following infrastructure in place and available:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DHCP server&lt;/li&gt;
+&lt;li&gt;Load Balancer or DNS address for cluster endpoint
+&lt;ul&gt;
+&lt;li&gt;If using a load balancer, the most common setup is to balance &lt;code&gt;tcp/443&lt;/code&gt; across the control plane nodes &lt;code&gt;tcp/6443&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;If using a DNS address, the A record should return back the addresses of the control plane nodes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;create-the-machine-configuration-files&#34;&gt;Create the Machine Configuration Files&lt;/h3&gt;
+&lt;h4 id=&#34;generating-base-configurations&#34;&gt;Generating Base Configurations&lt;/h4&gt;
+&lt;p&gt;Using the DNS name or name of the loadbalancer used in the prereq steps, generate the base configuration files for the Talos machines:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ talosctl gen config talos-k8s-vmware-tutorial https://&amp;lt;load balancer IP or DNS&amp;gt;:&amp;lt;port&amp;gt;
+created init.yaml
+created controlplane.yaml
+created join.yaml
+created talosconfig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ talosctl gen config talos-k8s-vmware-tutorial https://&amp;lt;DNS name&amp;gt;:6443
+created init.yaml
+created controlplane.yaml
+created join.yaml
+created talosconfig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;At this point, you can modify the generated configs to your liking.&lt;/p&gt;
+&lt;h4 id=&#34;validate-the-configuration-files&#34;&gt;Validate the Configuration Files&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ talosctl validate --config init.yaml --mode cloud
+init.yaml is valid &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; cloud mode
+$ talosctl validate --config controlplane.yaml --mode cloud
+controlplane.yaml is valid &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; cloud mode
+$ talosctl validate --config join.yaml --mode cloud
+join.yaml is valid &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;for&lt;/span&gt; cloud mode
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;set-environment-variables&#34;&gt;Set Environment Variables&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;govc&lt;/code&gt; makes use of the following environment variables&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;GOVC_URL&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&amp;lt;vCenter url&amp;gt;
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;GOVC_USERNAME&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&amp;lt;vCenter username&amp;gt;
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;GOVC_PASSWORD&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&amp;lt;vCenter password&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Note: If your vCenter installation makes use of self signed certificates, you&amp;rsquo;ll want to export &lt;code&gt;GOVC_INSECURE=true&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There are some additional variables that you may need to set:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;GOVC_DATACENTER&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&amp;lt;vCenter datacenter&amp;gt;
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;GOVC_RESOURCE_POOL&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&amp;lt;vCenter resource pool&amp;gt;
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;GOVC_DATASTORE&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&amp;lt;vCenter datastore&amp;gt;
+&lt;span style=&#34;color:#204a87&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;GOVC_NETWORK&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&amp;lt;vCenter network&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;download-the-ova&#34;&gt;Download the OVA&lt;/h3&gt;
+&lt;p&gt;A &lt;code&gt;talos.ova&lt;/code&gt; asset is published with each &lt;a href=&#34;https://github.com/talos-systems/talos/releases&#34;&gt;release&lt;/a&gt;.
+We will refer to the version of the release as &lt;code&gt;$TALOS_VERSION&lt;/code&gt; below.
+It can be easily exported with &lt;code&gt;export TALOS_VERSION=&amp;quot;v0.3.0-alpha.10&amp;quot;&lt;/code&gt; or similar.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -LO https://github.com/talos-systems/talos/releases/download/&lt;span style=&#34;color:#000&#34;&gt;$TALOS_VERSION&lt;/span&gt;/talos.ova
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;import-the-ova-into-vcenter&#34;&gt;Import the OVA into vCenter&lt;/h3&gt;
+&lt;p&gt;We&amp;rsquo;ll need to repeat this step for each Talos node we want to create.
+In a typical HA setup, we&amp;rsquo;ll have 3 control plane nodes and N workers.
+In the following example, we&amp;rsquo;ll setup a HA control plane with two worker nodes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc import.ova -name talos-&lt;span style=&#34;color:#000&#34;&gt;$TALOS_VERSION&lt;/span&gt; /path/to/downloaded/talos.ova
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;create-the-bootstrap-node&#34;&gt;Create the Bootstrap Node&lt;/h4&gt;
+&lt;p&gt;We&amp;rsquo;ll clone the OVA to create the bootstrap node (our first control plane node).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.clone -on&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt; -vm talos-&lt;span style=&#34;color:#000&#34;&gt;$TALOS_VERSION&lt;/span&gt; control-plane-1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Talos makes use of the &lt;code&gt;guestinfo&lt;/code&gt; facility of VMware to provide the machine/cluster configuration.
+This can be set using the &lt;code&gt;govc vm.change&lt;/code&gt; command.
+To facilitate persistent storage using the vSphere cloud provider integration with Kubernetes, &lt;code&gt;disk.enableUUID=1&lt;/code&gt; is used.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.change &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;guestinfo.talos.config=&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;cat init.yaml &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; base64&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;disk.enableUUID=1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -vm /ha-datacenter/vm/control-plane-1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;update-hardware-resources-for-the-bootstrap-node&#34;&gt;Update Hardware Resources for the Bootstrap Node&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-c&lt;/code&gt; is used to configure the number of cpus&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-m&lt;/code&gt; is used to configure the amount of memory (in MB)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.change &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -c &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -m &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4096&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -vm /ha-datacenter/vm/control-plane-1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The following can be used to adjust the ephemeral disk size.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.disk.change -vm control-plane-1 -disk.name disk-1000-0 -size 10G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.power -on control-plane-1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;create-the-remaining-control-plane-nodes&#34;&gt;Create the Remaining Control Plane Nodes&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.clone -on&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt; -vm talos-&lt;span style=&#34;color:#000&#34;&gt;$TALOS_VERSION&lt;/span&gt; control-plane-2
+govc vm.change &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;guestinfo.talos.config=&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;base64 controlplane.yaml&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;disk.enableUUID=1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -vm /ha-datacenter/vm/control-plane-2
+govc vm.clone -on&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt; -vm talos-&lt;span style=&#34;color:#000&#34;&gt;$TALOS_VERSION&lt;/span&gt; control-plane-3
+govc vm.change &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;guestinfo.talos.config=&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;base64 controlplane.yaml&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;disk.enableUUID=1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -vm /ha-datacenter/vm/control-plane-3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.change &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -c &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -m &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4096&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -vm /ha-datacenter/vm/control-plane-2
+govc vm.change &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -c &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -m &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4096&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -vm /ha-datacenter/vm/control-plane-3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.disk.change -vm control-plane-2 -disk.name disk-1000-0 -size 10G
+govc vm.disk.change -vm control-plane-3 -disk.name disk-1000-0 -size 10G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.power -on control-plane-2
+govc vm.power -on control-plane-3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;update-settings-for-the-worker-nodes&#34;&gt;Update Settings for the Worker Nodes&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.clone -on&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt; -vm talos-&lt;span style=&#34;color:#000&#34;&gt;$TALOS_VERSION&lt;/span&gt; worker-1
+govc vm.change &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;guestinfo.talos.config=&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;base64 join.yaml&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;disk.enableUUID=1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -vm /ha-datacenter/vm/worker-1
+govc vm.clone -on&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;false&lt;/span&gt; -vm talos-&lt;span style=&#34;color:#000&#34;&gt;$TALOS_VERSION&lt;/span&gt; worker-2
+govc vm.change &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;guestinfo.talos.config=&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;base64 join.yaml&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -e &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;disk.enableUUID=1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -vm /ha-datacenter/vm/worker-2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.change &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -c &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -m &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8192&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -vm /ha-datacenter/vm/worker-1
+govc vm.change &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -c &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -m &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8192&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;  -vm /ha-datacenter/vm/worker-2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.disk.change -vm worker-1 -disk.name disk-1000-0 -size 50G
+govc vm.disk.change -vm worker-2 -disk.name disk-1000-0 -size 50G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;govc vm.power -on worker-1
+govc vm.power -on worker-2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;retrieve-the-kubeconfig&#34;&gt;Retrieve the &lt;code&gt;kubeconfig&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;At this point we can retrieve the admin &lt;code&gt;kubeconfig&lt;/code&gt; by running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl --talosconfig talosconfig config endpoint &amp;lt;control plane &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; IP&amp;gt;
+talosctl --talosconfig talosconfig config node &amp;lt;control plane &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; IP&amp;gt;
+talosctl --talosconfig talosconfig kubeconfig .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Xen</title>
+      <link>/docs/virtualized-platforms/xen/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/virtualized-platforms/xen/</guid>
+      <description>
+        
+        
+        &lt;p&gt;Talos is known to work on Xen; however, it is currently undocumented.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,3 +1,0 @@
----
-title: "Single Board Computers"
----

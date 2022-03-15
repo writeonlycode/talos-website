@@ -1,0 +1,190 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Talos – Learn More</title>
+    <link>/docs/learn-more/</link>
+    <description>Recent content in Learn More on Talos</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/learn-more/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Architecture</title>
+      <link>/docs/learn-more/architecture/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/learn-more/architecture/</guid>
+      <description>
+        
+        
+        &lt;p&gt;In this section we will discuss the various components of which Talos is comprised.&lt;/p&gt;
+&lt;h2 id=&#34;components&#34;&gt;Components&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Component&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;apid&#34;&gt;apid&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;When interacting with Talos, the gRPC API endpoint you&amp;rsquo;re interact with directly is provided by &lt;code&gt;apid&lt;/code&gt;. &lt;code&gt;apid&lt;/code&gt; acts as the gateway for all component interactions and forwards the requests to &lt;code&gt;routerd&lt;/code&gt;.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;containerd&#34;&gt;containerd&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;An industry-standard container runtime with an emphasis on simplicity, robustness and portability. To learn more see the &lt;a href=&#34;https://containerd.io&#34;&gt;containerd website&lt;/a&gt;.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;machined&#34;&gt;machined&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Talos replacement for the traditional Linux init-process. Specially designed to run Kubernetes and does not allow starting arbitrary user services.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;networkd&#34;&gt;networkd&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Handles all of the host level network configuration. Configuration is defined under the &lt;code&gt;networking&lt;/code&gt; key&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;timed&#34;&gt;timed&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Handles the host time synchronization by acting as a NTP-client.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;kernel&#34;&gt;kernel&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;The Linux kernel included with Talos is configured according to the recommendations outlined in the &lt;a href=&#34;http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project&#34;&gt;Kernel Self Protection Project&lt;/a&gt;.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;routerd&#34;&gt;routerd&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Responsible for routing an incoming API request from &lt;code&gt;apid&lt;/code&gt; to the appropriate backend (e.g. &lt;code&gt;osd&lt;/code&gt;, &lt;code&gt;machined&lt;/code&gt; and &lt;code&gt;timed&lt;/code&gt;).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;trustd&#34;&gt;trustd&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;To run and operate a Kubernetes cluster a certain level of trust is required. Based on the concept of a &amp;lsquo;Root of Trust&amp;rsquo;, &lt;code&gt;trustd&lt;/code&gt; is a simple daemon responsible for establishing trust within the system.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;udevd&#34;&gt;udevd&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Implementation of &lt;code&gt;eudev&lt;/code&gt; into &lt;code&gt;machined&lt;/code&gt;. &lt;code&gt;eudev&lt;/code&gt; is Gentoo&amp;rsquo;s fork of udev, systemd&amp;rsquo;s device file manager for the Linux kernel. It manages device nodes in /dev and handles all user space actions when adding or removing devices. To learn more see the &lt;a href=&#34;https://wiki.gentoo.org/wiki/Eudev&#34;&gt;Gentoo Wiki&lt;/a&gt;.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;apid&#34;&gt;apid&lt;/h3&gt;
+&lt;p&gt;When interacting with Talos, the gRPC api endpoint you will interact with directly is &lt;code&gt;apid&lt;/code&gt;.
+Apid acts as the gateway for all component interactions.
+Apid provides a mechanism to route requests to the appropriate destination when running on a control plane node.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ll use some examples below to illustrate what &lt;code&gt;apid&lt;/code&gt; is doing.&lt;/p&gt;
+&lt;p&gt;When a user wants to interact with a Talos component via &lt;code&gt;talosctl&lt;/code&gt;, there are two flags that control the interaction with &lt;code&gt;apid&lt;/code&gt;.
+The &lt;code&gt;-e | --endpoints&lt;/code&gt; flag is used to denote which Talos node ( via &lt;code&gt;apid&lt;/code&gt; ) should handle the connection.
+Typically this is a public facing server.
+The &lt;code&gt;-n | --nodes&lt;/code&gt; flag is used to denote which Talos node(s) should respond to the request.
+If &lt;code&gt;--nodes&lt;/code&gt; is not specified, the first endpoint will be used.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note: Typically there will be an &lt;code&gt;endpoint&lt;/code&gt; already defined in the Talos config file.
+Optionally, &lt;code&gt;nodes&lt;/code&gt; can be included here as well.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;For example, if a user wants to interact with &lt;code&gt;machined&lt;/code&gt;, a command like &lt;code&gt;talosctl -e cluster.talos.dev memory&lt;/code&gt; may be used.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ talosctl -e cluster.talos.dev memory
+NODE                TOTAL   USED   FREE   SHARED   BUFFERS   CACHE   AVAILABLE
+cluster.talos.dev   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;7938&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1768&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2390&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;145&lt;/span&gt;      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;53&lt;/span&gt;        &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3724&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;6571&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this case, &lt;code&gt;talosctl&lt;/code&gt; is interacting with &lt;code&gt;apid&lt;/code&gt; running on &lt;code&gt;cluster.talos.dev&lt;/code&gt; and forwarding the request to the &lt;code&gt;machined&lt;/code&gt; api.&lt;/p&gt;
+&lt;p&gt;If we wanted to extend our example to retrieve &lt;code&gt;memory&lt;/code&gt; from another node in our cluster, we could use the command &lt;code&gt;talosctl -e cluster.talos.dev -n node02 memory&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ talosctl -e cluster.talos.dev -n node02 memory
+NODE    TOTAL   USED   FREE   SHARED   BUFFERS   CACHE   AVAILABLE
+node02  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;7938&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1768&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2390&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;145&lt;/span&gt;      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;53&lt;/span&gt;        &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;3724&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;6571&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;apid&lt;/code&gt; instance on &lt;code&gt;cluster.talos.dev&lt;/code&gt; receives the request and forwards it to &lt;code&gt;apid&lt;/code&gt; running on &lt;code&gt;node02&lt;/code&gt; which forwards the request to the &lt;code&gt;machined&lt;/code&gt; api.&lt;/p&gt;
+&lt;p&gt;We can further extend our example to retrieve &lt;code&gt;memory&lt;/code&gt; for all nodes in our cluster by appending additional &lt;code&gt;-n node&lt;/code&gt; flags or using a comma separated list of nodes ( &lt;code&gt;-n node01,node02,node03&lt;/code&gt; ):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ talosctl -e cluster.talos.dev -n node01 -n node02 -n node03 memory
+NODE     TOTAL    USED    FREE     SHARED   BUFFERS   CACHE   AVAILABLE
+node01   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;7938&lt;/span&gt;     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;871&lt;/span&gt;     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4071&lt;/span&gt;     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;137&lt;/span&gt;      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;49&lt;/span&gt;        &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2945&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;7042&lt;/span&gt;
+node02   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;257844&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;14408&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;190796&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;18138&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;49&lt;/span&gt;        &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;52589&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;227492&lt;/span&gt;
+node03   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;257844&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1830&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;255186&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;125&lt;/span&gt;      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;49&lt;/span&gt;        &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;777&lt;/span&gt;     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;254556&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;apid&lt;/code&gt; instance on &lt;code&gt;cluster.talos.dev&lt;/code&gt; receives the request and forwards is to &lt;code&gt;node01&lt;/code&gt;, &lt;code&gt;node02&lt;/code&gt;, and &lt;code&gt;node03&lt;/code&gt; which then forwards the request to their local &lt;code&gt;machined&lt;/code&gt; api.&lt;/p&gt;
+&lt;h3 id=&#34;containerd&#34;&gt;containerd&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/containerd/containerd&#34;&gt;Containerd&lt;/a&gt; provides the container runtime to launch workloads on Talos as well as Kubernetes.&lt;/p&gt;
+&lt;p&gt;Talos services are namespaced under the &lt;code&gt;system&lt;/code&gt; namespace in containerd whereas the Kubernetes services are namespaced under the &lt;code&gt;k8s.io&lt;/code&gt; namespace.&lt;/p&gt;
+&lt;h3 id=&#34;machined&#34;&gt;machined&lt;/h3&gt;
+&lt;p&gt;A common theme throughout the design of Talos is minimalism.
+We believe strongly in the UNIX philosophy that each program should do one job well.
+The &lt;code&gt;init&lt;/code&gt; included in Talos is one example of this, and we are calling it &amp;ldquo;&lt;code&gt;machined&lt;/code&gt;&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;We wanted to create a focused &lt;code&gt;init&lt;/code&gt; that had one job - run Kubernetes.
+To that extent, &lt;code&gt;machined&lt;/code&gt; is relatively static in that it does not allow for arbitrary user defined services.
+Only the services necessary to run Kubernetes and manage the node are available.
+This includes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;containerd&#34;&gt;containerd&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;kubeadm&#34;&gt;kubeadm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kubernetes.io/docs/concepts/overview/components/&#34;&gt;kubelet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;networkd&#34;&gt;networkd&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;timed&#34;&gt;timed&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;trustd&#34;&gt;trustd&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;udevd&#34;&gt;udevd&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;networkd&#34;&gt;networkd&lt;/h3&gt;
+&lt;p&gt;Networkd handles all of the host level network configuration.
+Configuration is defined under the &lt;code&gt;networking&lt;/code&gt; key.&lt;/p&gt;
+&lt;p&gt;By default, we attempt to issue a DHCP request for every interface on the server.
+This can be overridden by supplying one of the following kernel arguments:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;talos.network.interface.ignore&lt;/code&gt; - specify a list of interfaces to skip discovery on&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ip&lt;/code&gt; - &lt;code&gt;ip=&amp;lt;client-ip&amp;gt;:&amp;lt;server-ip&amp;gt;:&amp;lt;gw-ip&amp;gt;:&amp;lt;netmask&amp;gt;:&amp;lt;hostname&amp;gt;:&amp;lt;device&amp;gt;:&amp;lt;autoconf&amp;gt;:&amp;lt;dns0-ip&amp;gt;:&amp;lt;dns1-ip&amp;gt;:&amp;lt;ntp0-ip&amp;gt;&lt;/code&gt; as documented in the &lt;a href=&#34;https://www.kernel.org/doc/Documentation/filesystems/nfs/nfsroot.txt&#34;&gt;kernel here&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;ex, &lt;code&gt;ip=10.0.0.99:::255.0.0.0:control-1:eth0:off:10.0.0.1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;timed&#34;&gt;timed&lt;/h3&gt;
+&lt;p&gt;Timed handles the host time synchronization.&lt;/p&gt;
+&lt;h3 id=&#34;kernel&#34;&gt;kernel&lt;/h3&gt;
+&lt;p&gt;The Linux kernel included with Talos is configured according to the recommendations outlined in the Kernel Self Protection Project (&lt;a href=&#34;http://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project&#34;&gt;KSSP&lt;/a&gt;).&lt;/p&gt;
+&lt;h3 id=&#34;trustd&#34;&gt;trustd&lt;/h3&gt;
+&lt;p&gt;Security is one of the highest priorities within Talos.
+To run a Kubernetes cluster a certain level of trust is required to operate a cluster.
+For example, orchestrating the bootstrap of a highly available control plane requires the distribution of sensitive PKI data.&lt;/p&gt;
+&lt;p&gt;To that end, we created &lt;code&gt;trustd&lt;/code&gt;.
+Based on the concept of a Root of Trust, &lt;code&gt;trustd&lt;/code&gt; is a simple daemon responsible for establishing trust within the system.
+Once trust is established, various methods become available to the trustee.
+It can, for example, accept a write request from another node to place a file on disk.&lt;/p&gt;
+&lt;p&gt;Additional methods and capability will be added to the &lt;code&gt;trustd&lt;/code&gt; component in support of new functionality in the rest of the Talos environment.&lt;/p&gt;
+&lt;h3 id=&#34;udevd&#34;&gt;udevd&lt;/h3&gt;
+&lt;p&gt;Udevd handles the kernel device notifications and sets up the necessary links in &lt;code&gt;/dev&lt;/code&gt;.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: FAQs</title>
+      <link>/docs/learn-more/faqs/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/learn-more/faqs/</guid>
+      <description>
+        
+        
+        &lt;!-- markdownlint-disable MD026 --&gt;
+&lt;h2 id=&#34;how-is-talos-different-from-other-container-optimized-linux-distros&#34;&gt;How is Talos different from other container optimized Linux distros?&lt;/h2&gt;
+&lt;p&gt;Talos shares a lot of attributes with other distros, but there are some important differences.
+Talos integrates tightly with Kubernetes, and is not meant to be a general-purpose operating system.
+The most important difference is that Talos is fully controlled by an API via a gRPC interface, instead of an ordinary shell.
+We don&amp;rsquo;t ship SSH, and there is no console access.
+Removing components such as these has allowed us to dramatically reduce the footprint of Talos, and in turn, improve a number of other areas like security, predictability, reliability, and consistency across platforms.
+It&amp;rsquo;s a big change from how operating systems have been managed in the past, but we believe that API-driven OSes are the future.&lt;/p&gt;
+&lt;h2 id=&#34;why-no-shell-or-ssh&#34;&gt;Why no shell or SSH?&lt;/h2&gt;
+&lt;p&gt;Since Talos is fully API-driven, all maintenance and debugging operations should be possible via the OS API.
+We would like for Talos users to start thinking about what a &amp;ldquo;machine&amp;rdquo; is in the context of a Kubernetes cluster.
+That is, that a Kubernetes &lt;em&gt;cluster&lt;/em&gt; can be thought of as one massive machine, and the &lt;em&gt;nodes&lt;/em&gt; are merely additional, undifferentiated resources.
+We don&amp;rsquo;t want humans to focus on the &lt;em&gt;nodes&lt;/em&gt;, but rather on the &lt;em&gt;machine&lt;/em&gt; that is the Kubernetes cluster.
+Should an issue arise at the node level, &lt;code&gt;talosctl&lt;/code&gt; should provide the necessary tooling to assist in the identification, debugging, and remedation of the issue.
+However, the API is based on the Principle of Least Privilege, and exposes only a limited set of methods.
+We envision Talos being a great place for the application of &lt;a href=&#34;https://en.wikipedia.org/wiki/Control_theory&#34;&gt;control theory&lt;/a&gt; in order to provide a self-healing platform.&lt;/p&gt;
+&lt;h2 id=&#34;why-the-name-talos&#34;&gt;Why the name &amp;ldquo;Talos&amp;rdquo;?&lt;/h2&gt;
+&lt;p&gt;Talos was an automaton created by the Greek God of the forge to protect the island of Crete.
+He would patrol the coast and enforce laws throughout the land.
+We felt it was a fitting name for a security focused operating system designed to run Kubernetes.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,145 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Talos – Introduction</title>
+    <link>/docs/introduction/</link>
+    <description>Recent content in Introduction on Talos</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/introduction/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: What is Talos?</title>
+      <link>/docs/introduction/what-is-talos/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/introduction/what-is-talos/</guid>
+      <description>
+        
+        
+        &lt;p&gt;Talos is an open source platform to host and maintain Kubernetes clusters.
+It includes a purpose-built operating system and associated management tools.
+It can run on all major cloud providers, virtualization platforms, and bare metal hardware.&lt;/p&gt;
+&lt;p&gt;All system management is done via an API, and there is no shell or interactive console.
+Some of the capabilities and benefits provided by Talos include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Security&lt;/strong&gt;: Talos reduces your attack surface by practicing the Principle of Least Privilege (PoLP) and by securing the API with mutual TLS (mTLS) authentication.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Predictability&lt;/strong&gt;: Talos eliminates unneeded variables and reduces unknown factors in your environment by employing immutable infrastructure ideology.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Evolvability&lt;/strong&gt;: Talos simplifies your architecture and increases your ability to easily accommodate future changes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Talos is flexible and can be deployed in a variety of ways, but the easiest way to get started and experiment with the system is to run a local cluster on your laptop or workstation.
+There are two options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/v0.6/local-platforms/docker/&#34;&gt;Run a Docker-based local cluster&lt;/a&gt; on your Linux or Mac workstation&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/v0.6/local-platforms/docker/&#34;&gt;Run a Firecracker micro-VM-based&lt;/a&gt; cluster on your Linux workstation&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Quickstart</title>
+      <link>/docs/introduction/quickstart/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/introduction/quickstart/</guid>
+      <description>
+        
+        
+        &lt;p&gt;In this guide we will create a Kubernetes cluster in Docker, using a containerized version of Talos.&lt;/p&gt;
+&lt;p&gt;Running Talos in Docker is intended to be used in CI pipelines, and local testing when you need a quick and easy cluster.
+Furthermore, if you are running Talos in production, it provides an excellent way for developers to develop against the same version of Talos.&lt;/p&gt;
+&lt;h2 id=&#34;requirements&#34;&gt;Requirements&lt;/h2&gt;
+&lt;p&gt;The follow are requirements for running Talos in Docker:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Docker 18.03 or greater&lt;/li&gt;
+&lt;li&gt;a recent version of &lt;a href=&#34;https://github.com/talos-systems/talos/releases&#34;&gt;&lt;code&gt;talosctl&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;create-the-cluster&#34;&gt;Create the Cluster&lt;/h2&gt;
+&lt;p&gt;Creating a local cluster is as simple as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl cluster create --wait
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the above finishes successfully, your talosconfig(&lt;code&gt;~/.talos/config&lt;/code&gt;) will be configured to point to the new cluster.&lt;/p&gt;
+&lt;p&gt;If you are running on MacOS, an additional command is required:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl config --endpoints 127.0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Note: Startup times can take up to a minute before the cluster is available.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;retrieve-and-configure-the-kubeconfig&#34;&gt;Retrieve and Configure the &lt;code&gt;kubeconfig&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl kubeconfig .
+kubectl --kubeconfig kubeconfig config set-cluster talos-default --server https://127.0.0.1:6443
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;using-the-cluster&#34;&gt;Using the Cluster&lt;/h2&gt;
+&lt;p&gt;Once the cluster is available, you can make use of &lt;code&gt;talosctl&lt;/code&gt; and &lt;code&gt;kubectl&lt;/code&gt; to interact with the cluster.
+For example, to view current running containers, run &lt;code&gt;talosctl containers&lt;/code&gt; for a list of containers in the &lt;code&gt;system&lt;/code&gt; namespace, or &lt;code&gt;talosctl containers -k&lt;/code&gt; for the &lt;code&gt;k8s.io&lt;/code&gt; namespace.
+To view the logs of a container, use &lt;code&gt;talosctl logs &amp;lt;container&amp;gt;&lt;/code&gt; or &lt;code&gt;talosctl logs -k &amp;lt;container&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;cleaning-up&#34;&gt;Cleaning Up&lt;/h2&gt;
+&lt;p&gt;To cleanup, run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl cluster destroy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: System Requirements</title>
+      <link>/docs/introduction/system-requirements/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/introduction/system-requirements/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;minimum-requirements&#34;&gt;Minimum Requirements&lt;/h2&gt;
+&lt;table class=&#34;table-auto&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th class=&#34;px-4 py-2&#34;&gt;Role&lt;/th&gt;
+      &lt;th class=&#34;px-4 py-2&#34;&gt;Memory&lt;/th&gt;
+      &lt;th class=&#34;px-4 py-2&#34;&gt;Cores&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;Init/Control Plane&lt;/td&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;2GB&lt;/td&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr class=&#34;bg-gray-100&#34;&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;Worker&lt;/td&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;1GB&lt;/td&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;recommended&#34;&gt;Recommended&lt;/h2&gt;
+&lt;table class=&#34;table-auto&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th class=&#34;px-4 py-2&#34;&gt;Role&lt;/th&gt;
+      &lt;th class=&#34;px-4 py-2&#34;&gt;Memory&lt;/th&gt;
+      &lt;th class=&#34;px-4 py-2&#34;&gt;Cores&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;Init/Control Plane&lt;/td&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;4GB&lt;/td&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;4&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr class=&#34;bg-gray-100&#34;&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;Worker&lt;/td&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;2GB&lt;/td&gt;
+      &lt;td class=&#34;border px-4 py-2&#34;&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;These requirements are similar to that of kubernetes.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

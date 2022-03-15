@@ -1,3 +1,0 @@
----
-title: "Bare Metal Platforms"
----

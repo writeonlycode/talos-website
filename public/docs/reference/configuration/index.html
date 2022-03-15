@@ -1,0 +1,1469 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.92.0" />
+<meta name="robots" content="index, follow">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Configuration | Talos</title>
+<meta name="description" content="
+Package v1alpha1 configuration file contains all the options available for configuring a machine.
+We can generate the files using talosctl.
+This …&lt;/!--&gt;">
+<meta property="og:title" content="Configuration" />
+<meta property="og:description" content="Package v1alpha1 configuration file contains all the options available for configuring a machine.
+We can generate the files using talosctl. This configuration is enough to get started in most cases, however it can be customized as needed.
+talosctl config generate --version v1alpha1 &lt;cluster name&gt; &lt;cluster endpoint&gt; This will generate a machine config for each node type, and a talosconfig. The following is an example of an init.yaml:
+version:v1alpha1machine:type:inittoken:5dt69c.npg6duv71zwqhzbgca:crt:&lt;base64 encoded Ed25519 certificate&gt;key:&lt;base64 encoded Ed25519 key&gt;certSANs:[]kubelet:{}network:{}install:disk:/dev/sdaimage:docker." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/docs/reference/configuration/" /><meta property="article:section" content="docs" />
+
+<meta property="article:modified_time" content="2022-03-15T10:35:16-03:00" />
+
+<meta itemprop="name" content="Configuration">
+<meta itemprop="description" content="Package v1alpha1 configuration file contains all the options available for configuring a machine.
+We can generate the files using talosctl. This configuration is enough to get started in most cases, however it can be customized as needed.
+talosctl config generate --version v1alpha1 &lt;cluster name&gt; &lt;cluster endpoint&gt; This will generate a machine config for each node type, and a talosconfig. The following is an example of an init.yaml:
+version:v1alpha1machine:type:inittoken:5dt69c.npg6duv71zwqhzbgca:crt:&lt;base64 encoded Ed25519 certificate&gt;key:&lt;base64 encoded Ed25519 key&gt;certSANs:[]kubelet:{}network:{}install:disk:/dev/sdaimage:docker.">
+<meta itemprop="dateModified" content="2022-03-15T10:35:16-03:00" />
+<meta itemprop="wordCount" content="2521">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Configuration"/>
+<meta name="twitter:description" content="Package v1alpha1 configuration file contains all the options available for configuring a machine.
+We can generate the files using talosctl. This configuration is enough to get started in most cases, however it can be customized as needed.
+talosctl config generate --version v1alpha1 &lt;cluster name&gt; &lt;cluster endpoint&gt; This will generate a machine config for each node type, and a talosconfig. The following is an example of an init.yaml:
+version:v1alpha1machine:type:inittoken:5dt69c.npg6duv71zwqhzbgca:crt:&lt;base64 encoded Ed25519 certificate&gt;key:&lt;base64 encoded Ed25519 key&gt;certSANs:[]kubelet:{}network:{}install:disk:/dev/sdaimage:docker."/>
+
+
+
+
+<link rel="preload" href="/scss/main.min.04d45cbf9e8ce4d4af81280fe85913966e0e6cda7a78c5264e5846a26d93c636.css" as="style">
+<link href="/scss/main.min.04d45cbf9e8ce4d4af81280fe85913966e0e6cda7a78c5264e5846a26d93c636.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-00000000-0', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/">
+		<span class="navbar-logo"><svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500" style="enable-background:new 0 0 500 500"><g><path style="fill:#fff" d="M116.8525 421.9722c-5.7041.0-10.3442-4.3127-10.3442-9.6129V88.183c0-5.3002 4.6401-9.6117 10.3442-9.6117H320.858c3.0347.0 9.3959.5498 11.7506 2.6302l.3545.3442 58.905 63.2912c2.3101 2.491 2.9202 8.4928 2.9202 11.3184v256.2039c0 5.3002-4.6407 9.6129-10.3436 9.6129H116.8525z"/><g><g><g><path style="fill:#767676" d="M384.4445 423.2066H116.852c-6.3839.0-11.5786-4.8658-11.5786-10.8474V88.1831c0-5.9804 5.1947-10.8461 11.5786-10.8461h204.0062c.377.0 9.2786.0329 12.568 2.9389l.3947.3833 58.9508 63.337c3.2135 3.4652 3.2514 11.7924 3.2514 12.1593v256.2036C396.0231 418.3408 390.8284 423.2066 384.4445 423.2066zM116.5079 411.9189c.0848.0278.1999.0531.3441.0531h267.5925c.1442.0.2581-.0253.3441-.0531V156.1556c-.0076-.9033-.3593-3.7347-.7034-5.0037l-57.6527-61.9416c-1.4651-.3176-4.4533-.6389-5.5742-.6389H116.852c-.143.0-.2594.024-.3441.0531V411.9189zm267.4533-261.149zM327.0321 89.371v.0013V89.371z"/></g></g></g><g><g><path style="fill:#5b7fc0" d="M189.0874 210.1754l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.025 2.454-11.4897 6.4116-15.4473C177.5953 212.627 183.0601 210.1742 189.0874 210.1754zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403S197.0816 234.1722 197.0804 232.033z"/><path style="opacity:.3;fill:#fff" d="M189.0898 210.176c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 212.6276 183.0612 210.176 189.0898 210.176zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 236.239 197.0839 234.2399 197.0839 232.0372z"/><g><defs><path id="SVGID_1_" d="M194.7376 237.6875c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.999 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 234.2399 196.1861 236.239 194.7376 237.6875z"/></defs><clipPath id="SVGID_2_"><use xlink:href="#SVGID_1_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_2_);fill:#fff" d="M190.0704 225.0237c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 225.7247 191.9774 225.0237 190.0704 225.0237z"/><path style="opacity:.13;clip-path:url(#SVGID_2_);fill:#020202" d="M190.0704 225.0237c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 225.7247 191.9774 225.0237 190.0704 225.0237z"/></g><g><defs><path id="SVGID_3_" d="M189.0898 210.176c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 212.6276 183.0612 210.176 189.0898 210.176zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 236.239 197.0839 234.2399 197.0839 232.0372z"/></defs><clipPath id="SVGID_4_"><use xlink:href="#SVGID_3_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_4_);fill:#5b7fc0" d="M172.6595 215.6045c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8612 12.0547.0024 21.8636-9.797 21.8613-21.8612.0024-3.8475-1.0151-7.6326-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 209.1953 176.6171 211.647 172.6595 215.6045z"/></g></g><rect x="198.8952" y="225.1043" style="fill:#5b7fc0" width="122.6266" height="13.8671"/></g><g><path style="fill:#d95140" d="M189.0874 155.7611l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.0249 2.454-11.4897 6.4116-15.4473C177.5953 158.2128 183.0601 155.7599 189.0874 155.7611zm7.993 21.8577c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403C196.2508 181.7667 197.0816 179.758 197.0804 177.6188z"/><path style="opacity:.3;fill:#fff" d="M189.0898 155.7617c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 158.2134 183.0612 155.7617 189.0898 155.7617zm7.9941 21.8613c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 181.8248 197.0839 179.8256 197.0839 177.623z"/><g><defs><path id="SVGID_5_" d="M194.7376 183.2733c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.9989 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 179.8256 196.1861 181.8248 194.7376 183.2733z"/></defs><clipPath id="SVGID_6_"><use xlink:href="#SVGID_5_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_6_);fill:#fff" d="M190.0704 170.6095c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 171.3104 191.9774 170.6095 190.0704 170.6095z"/><path style="opacity:.13;clip-path:url(#SVGID_6_);fill:#020202" d="M190.0704 170.6095c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 171.3104 191.9774 170.6095 190.0704 170.6095z"/></g><g><defs><path id="SVGID_7_" d="M189.0898 155.7617c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 158.2134 183.0612 155.7617 189.0898 155.7617zm7.9941 21.8613c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 181.8248 197.0839 179.8256 197.0839 177.623z"/></defs><clipPath id="SVGID_8_"><use xlink:href="#SVGID_7_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_8_);fill:#d95140" d="M172.6595 161.1903c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8613 12.0547.0024 21.8636-9.797 21.8613-21.8613.0024-3.8474-1.0151-7.6326-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 154.7811 176.6171 157.2327 172.6595 161.1903z"/></g><rect x="198.8952" y="170.69" style="fill:#d95140" width="122.6266" height="13.8671"/></g><g><g><path style="fill:#56a55c" d="M189.5379 264.6147l.0012-.0012c7.7751.0012 15.0294 4.1862 18.932 10.9235 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032-5.8394.0-11.3281-2.2733-15.458-6.4032-4.13-4.13-6.4032-9.6186-6.4056-15.4628.0012-6.0249 2.454-11.4897 6.4116-15.4472C178.0458 267.0663 183.5105 264.6135 189.5379 264.6147zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6538 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403C196.7013 290.6202 197.5321 288.6115 197.5309 286.4723z"/><path style="opacity:.3;fill:#fff" d="M189.5403 264.6153c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8065-21.8612-21.8613.0-6.0285 2.4516-11.492 6.4116-15.452C178.0482 267.0669 183.5117 264.6153 189.5403 264.6153zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.6366 290.6783 197.5344 288.6792 197.5344 286.4765z"/><g><defs><path id="SVGID_9_" d="M195.1881 292.1268c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.9989 7.9942-7.9941 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.5344 288.6792 196.6366 290.6783 195.1881 292.1268z"/></defs><clipPath id="SVGID_10_"><use xlink:href="#SVGID_9_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_10_);fill:#fff" d="M190.5209 279.463c-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7446-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9941 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C194.239 280.164 192.4279 279.463 190.5209 279.463z"/><path style="opacity:.13;clip-path:url(#SVGID_10_);fill:#020202" d="M190.5209 279.463c-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7446-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9941 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C194.239 280.164 192.4279 279.463 190.5209 279.463z"/></g><g><defs><path id="SVGID_11_" d="M189.5403 264.6153c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8065-21.8612-21.8613.0-6.0285 2.4516-11.492 6.4116-15.452C178.0482 267.0669 183.5117 264.6153 189.5403 264.6153zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.6366 290.6783 197.5344 288.6792 197.5344 286.4765z"/></defs><clipPath id="SVGID_12_"><use xlink:href="#SVGID_11_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_12_);fill:#56a55c" d="M173.11 270.0439c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8613 12.0547.0024 21.8636-9.797 21.8613-21.8613.0024-3.8474-1.0151-7.6326-2.9353-10.9462-3.8977-6.7325-11.1497-10.9151-18.926-10.9151C182.5311 263.6346 177.0676 266.0863 173.11 270.0439z"/></g></g><rect x="199.3456" y="279.5436" style="fill:#56a55c" width="122.6266" height="13.8671"/></g><g><g><path style="fill:#f1bc42" d="M189.0874 318.7208l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3305-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.025 2.454-11.4897 6.4116-15.4472C177.5953 321.1724 183.0601 318.7196 189.0874 318.7208zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403S197.0816 342.7176 197.0804 340.5784z"/><path style="opacity:.3;fill:#fff" d="M189.0898 318.7214c7.7763.0 15.0283 4.1826 18.926 10.915 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8612-12.0547.0024-21.8636-9.8065-21.8612-21.8612.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 321.173 183.0612 318.7214 189.0898 318.7214zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 344.7844 197.0839 342.7853 197.0839 340.5826z"/><g><defs><path id="SVGID_13_" d="M194.7376 346.2329c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.999 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 342.7853 196.1861 344.7844 194.7376 346.2329z"/></defs><clipPath id="SVGID_14_"><use xlink:href="#SVGID_13_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_14_);fill:#fff" d="M190.0704 333.5691c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0834 6.1218 2.8788C193.7885 334.2701 191.9774 333.5691 190.0704 333.5691z"/><path style="opacity:.13;clip-path:url(#SVGID_14_);fill:#020202" d="M190.0704 333.5691c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0834 6.1218 2.8788C193.7885 334.2701 191.9774 333.5691 190.0704 333.5691z"/></g><g><defs><path id="SVGID_15_" d="M189.0898 318.7214c7.7763.0 15.0283 4.1826 18.926 10.915 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8612-12.0547.0024-21.8636-9.8065-21.8612-21.8612.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 321.173 183.0612 318.7214 189.0898 318.7214zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 344.7844 197.0839 342.7853 197.0839 340.5826z"/></defs><clipPath id="SVGID_16_"><use xlink:href="#SVGID_15_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_16_);fill:#f1bc42" d="M172.6595 324.15c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8612 12.0547.0024 21.8636-9.797 21.8613-21.8612.0024-3.8474-1.0151-7.6327-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 317.7407 176.6171 320.1924 172.6595 324.15z"/></g></g><rect x="198.8952" y="333.6497" style="fill:#f1bc42" width="122.6266" height="13.8671"/></g></g></svg></span><span class="text-uppercase font-weight-bold">Talos</span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/docs/" ><span class="active">Documentation</span></a>
+			</li>
+			
+			
+			<li class="nav-item dropdown mr-4 d-none d-lg-block">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	Releases
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	<a class="dropdown-item" href="https://v0-2.kubeflow.org">v0.6</a>
+	
+	<a class="dropdown-item" href="https://v0-3.kubeflow.org">v0.7</a>
+	
+	<a class="dropdown-item" href="https://v0-3.kubeflow.org">v0.8</a>
+	
+	<a class="dropdown-item" href="https://v0-3.kubeflow.org">v0.9</a>
+	
+	<a class="dropdown-item" href="https://v0-3.kubeflow.org">v0.10</a>
+	
+	<a class="dropdown-item" href="https://v0-3.kubeflow.org">v0.11</a>
+	
+	<a class="dropdown-item" href="https://v0-3.kubeflow.org">v0.12</a>
+	
+	<a class="dropdown-item" href="https://v0-3.kubeflow.org">v0.13</a>
+	
+	<a class="dropdown-item" href="https://v0-3.kubeflow.org">v0.14</a>
+	
+	<a class="dropdown-item" href="https://v0-3.kubeflow.org">v1.0</a>
+	
+</div>
+
+			</li>
+			
+			
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block"><input type="search" class="form-control td-search-input" placeholder="&#xf002; Search this site…" aria-label="Search this site…" autocomplete="off">
+</div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  <form class="td-sidebar__search d-flex align-items-center">
+    <input type="search" class="form-control td-search-input" placeholder="&#xf002; Search this site…" aria-label="Search this site…" autocomplete="off">
+
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pr-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docs-li">
+  <a href="/docs/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-docs"><span class="">Welcome</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsbare-metal-platforms-li">
+  <a href="/docs/bare-metal-platforms/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-docsbare-metal-platforms"><span class="">Bare Metal Platforms</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsbare-metal-platformsdigital-rebar-li">
+  <a href="/docs/bare-metal-platforms/digital-rebar/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsbare-metal-platformsdigital-rebar"><span class="">Digital Rebar</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsbare-metal-platformsequinix-metal-li">
+  <a href="/docs/bare-metal-platforms/equinix-metal/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsbare-metal-platformsequinix-metal"><span class="">Equinix Metal</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsbare-metal-platformsmatchbox-li">
+  <a href="/docs/bare-metal-platforms/matchbox/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsbare-metal-platformsmatchbox"><span class="">Matchbox</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsbare-metal-platformssidero-li">
+  <a href="/docs/bare-metal-platforms/sidero/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsbare-metal-platformssidero"><span class="">Sidero</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docscloud-platforms-li">
+  <a href="/docs/cloud-platforms/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-docscloud-platforms"><span class="">Cloud Platforms</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscloud-platformsaws-li">
+  <a href="/docs/cloud-platforms/aws/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docscloud-platformsaws"><span class="">AWS</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscloud-platformsazure-li">
+  <a href="/docs/cloud-platforms/azure/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docscloud-platformsazure"><span class="">Azure</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscloud-platformsdigitalocean-li">
+  <a href="/docs/cloud-platforms/digitalocean/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docscloud-platformsdigitalocean"><span class="">DigitalOcean</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscloud-platformsgcp-li">
+  <a href="/docs/cloud-platforms/gcp/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docscloud-platformsgcp"><span class="">GCP</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsguides-li">
+  <a href="/docs/guides/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-docsguides"><span class="">Gides</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidesadvanced-networking-li">
+  <a href="/docs/guides/advanced-networking/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidesadvanced-networking"><span class="">Advanced Networking</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidesconfiguring-containerd-li">
+  <a href="/docs/guides/configuring-containerd/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidesconfiguring-containerd"><span class="">Configuring Containerd</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidesconfiguring-corporate-proxies-li">
+  <a href="/docs/guides/configuring-corporate-proxies/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidesconfiguring-corporate-proxies"><span class="">Configuring Corporate Proxies</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidesconfiguring-pull-through-cache-li">
+  <a href="/docs/guides/configuring-pull-through-cache/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidesconfiguring-pull-through-cache"><span class="">Configuring Pull Through Cache</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidesconfiguring-the-cluster-endpoint-li">
+  <a href="/docs/guides/configuring-the-cluster-endpoint/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidesconfiguring-the-cluster-endpoint"><span class="">Configuring the Cluster Endpoint</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidescustomizing-the-kernel-li">
+  <a href="/docs/guides/customizing-the-kernel/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidescustomizing-the-kernel"><span class="">Customizing the Kernel</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidescustomizing-the-root-filesystem-li">
+  <a href="/docs/guides/customizing-the-root-filesystem/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidescustomizing-the-root-filesystem"><span class="">Customizing the Root Filesystem</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidesmanaging-pki-li">
+  <a href="/docs/guides/managing-pki/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidesmanaging-pki"><span class="">Managing PKI</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidesresetting-a-machine-li">
+  <a href="/docs/guides/resetting-a-machine/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidesresetting-a-machine"><span class="">Resetting a Machine</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidesupgrading-kubernetes-li">
+  <a href="/docs/guides/upgrading-kubernetes/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidesupgrading-kubernetes"><span class="">Upgrading Kubernetes</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsguidesupgrading-talos-li">
+  <a href="/docs/guides/upgrading-talos/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsguidesupgrading-talos"><span class="">Upgrading Talos</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsintroduction-li">
+  <a href="/docs/introduction/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-docsintroduction"><span class="">Introduction</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsintroductionwhat-is-talos-li">
+  <a href="/docs/introduction/what-is-talos/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsintroductionwhat-is-talos"><span class="">What is Talos?</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsintroductionquickstart-li">
+  <a href="/docs/introduction/quickstart/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsintroductionquickstart"><span class="">Quickstart</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsintroductionsystem-requirements-li">
+  <a href="/docs/introduction/system-requirements/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsintroductionsystem-requirements"><span class="">System Requirements</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docslearn-more-li">
+  <a href="/docs/learn-more/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-docslearn-more"><span class="">Learn More</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docslearn-morearchitecture-li">
+  <a href="/docs/learn-more/architecture/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docslearn-morearchitecture"><span class="">Architecture</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docslearn-morefaqs-li">
+  <a href="/docs/learn-more/faqs/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docslearn-morefaqs"><span class="">FAQs</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docslocal-platforms-li">
+  <a href="/docs/local-platforms/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-docslocal-platforms"><span class="">Local Platforms</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docslocal-platformsdocker-li">
+  <a href="/docs/local-platforms/docker/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docslocal-platformsdocker"><span class="">Docker</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docslocal-platformsfirecracker-li">
+  <a href="/docs/local-platforms/firecracker/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docslocal-platformsfirecracker"><span class="">Firecracker</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docslocal-platformsqemu-li">
+  <a href="/docs/local-platforms/qemu/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docslocal-platformsqemu"><span class="">QEMU</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docsreference-li">
+  <a href="/docs/reference/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-docsreference"><span class="">Reference</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-docsreferenceconfiguration-li">
+  <a href="/docs/reference/configuration/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-docsreferenceconfiguration"><span class="td-sidebar-nav-active-item">Configuration</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-docsvirtualized-platforms-li">
+  <a href="/docs/virtualized-platforms/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-docsvirtualized-platforms"><span class="">Virtualized Platforms</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsvirtualized-platformshyper-v-li">
+  <a href="/docs/virtualized-platforms/hyper-v/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsvirtualized-platformshyper-v"><span class="">Hyper-V</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsvirtualized-platformskvm-li">
+  <a href="/docs/virtualized-platforms/kvm/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsvirtualized-platformskvm"><span class="">KVM</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsvirtualized-platformsproxmox-li">
+  <a href="/docs/virtualized-platforms/proxmox/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsvirtualized-platformsproxmox"><span class="">Proxmox</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsvirtualized-platformsvmware-li">
+  <a href="/docs/virtualized-platforms/vmware/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsvirtualized-platformsvmware"><span class="">VMware</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsvirtualized-platformsxen-li">
+  <a href="/docs/virtualized-platforms/xen/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-docsvirtualized-platformsxen"><span class="">Xen</span></a>
+</li>
+  </ul>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+<a id="print" href="/docs/reference/_print/"><i class="fa fa-print fa-fw"></i> Print entire section</a>
+
+</div>
+
+            
+
+
+<div class="td-toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#config">Config</a></li>
+        <li><a href="#machineconfig">MachineConfig</a></li>
+        <li><a href="#clusterconfig">ClusterConfig</a></li>
+        <li><a href="#kubeletconfig">KubeletConfig</a></li>
+        <li><a href="#networkconfig">NetworkConfig</a></li>
+        <li><a href="#installconfig">InstallConfig</a></li>
+        <li><a href="#timeconfig">TimeConfig</a></li>
+        <li><a href="#registriesconfig">RegistriesConfig</a></li>
+        <li><a href="#podcheckpointer-1">PodCheckpointer</a></li>
+        <li><a href="#coredns-1">CoreDNS</a></li>
+        <li><a href="#endpoint">Endpoint</a></li>
+        <li><a href="#controlplaneconfig">ControlPlaneConfig</a></li>
+        <li><a href="#apiserverconfig">APIServerConfig</a></li>
+        <li><a href="#controllermanagerconfig">ControllerManagerConfig</a></li>
+        <li><a href="#proxyconfig">ProxyConfig</a></li>
+        <li><a href="#schedulerconfig">SchedulerConfig</a></li>
+        <li><a href="#etcdconfig">EtcdConfig</a></li>
+        <li><a href="#clusternetworkconfig">ClusterNetworkConfig</a></li>
+        <li><a href="#cniconfig">CNIConfig</a></li>
+        <li><a href="#adminkubeconfigconfig">AdminKubeconfigConfig</a></li>
+        <li><a href="#machinedisk">MachineDisk</a></li>
+        <li><a href="#diskpartition">DiskPartition</a></li>
+        <li><a href="#machinefile">MachineFile</a></li>
+        <li><a href="#extrahost">ExtraHost</a></li>
+        <li><a href="#device-1">Device</a></li>
+        <li><a href="#bond-1">Bond</a></li>
+        <li><a href="#vlan">Vlan</a></li>
+        <li><a href="#route">Route</a></li>
+        <li><a href="#registrymirrorconfig">RegistryMirrorConfig</a></li>
+        <li><a href="#registryconfig">RegistryConfig</a></li>
+        <li><a href="#registryauthconfig">RegistryAuthConfig</a></li>
+        <li><a href="#registrytlsconfig">RegistryTLSConfig</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+
+
+
+            
+
+	
+		
+			
+		
+		
+
+
+
+  
+  
+
+	
+		
+			
+		
+		
+
+
+
+  
+  
+
+	
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="td-breadcrumbs">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="/docs/">Welcome</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="/docs/reference/">Reference</a>
+  </li>
+  <li class="breadcrumb-item active" aria-current="page">
+    <a href="/docs/reference/configuration/">Configuration</a>
+  </li>
+  </ol>
+</nav>
+            
+<div class="td-content">
+	<h1>Configuration</h1>
+	
+	<header class="article-meta">
+		
+		
+			
+				
+
+
+			
+				
+
+
+			
+		
+		
+	</header>    
+	<!-- markdownlint-disable MD024 -->
+<p>Package v1alpha1 configuration file contains all the options available for configuring a machine.</p>
+<p>We can generate the files using <code>talosctl</code>.
+This configuration is enough to get started in most cases, however it can be customized as needed.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">talosctl config generate --version v1alpha1 &lt;cluster name&gt; &lt;cluster endpoint&gt;
+</code></pre></div><p>This will generate a machine config for each node type, and a talosconfig.
+The following is an example of an <code>init.yaml</code>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">version</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">v1alpha1</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">machine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">init</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">token</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">5dt69c.npg6duv71zwqhzbg</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">ca</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">crt</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">&lt;base64 encoded Ed25519 certificate&gt;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">&lt;base64 encoded Ed25519 key&gt;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">certSANs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">kubelet</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>{}<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">network</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>{}<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">install</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">disk</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">/dev/sda</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">docker.io/autonomy/installer:latest</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">bootloader</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">wipe</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">false</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">force</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">false</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span><span style="color:#204a87;font-weight:bold">cluster</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">controlPlane</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">endpoint</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">https://1.2.3.4</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">clusterName</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">example</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">network</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">cni</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">dnsDomain</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">cluster.local</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">podSubnets</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#0000cf;font-weight:bold">10.244.0.0</span><span style="color:#000">/16</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">serviceSubnets</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#0000cf;font-weight:bold">10.96.0.0</span><span style="color:#000">/12</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">token</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">wlzjyw.bei2zfylhs2by0wd</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">certificateKey</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">20d9aafb46d6db4c0958db5b3fc481c8c14fc9b1abd8ac43194f4246b77131be</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">aescbcEncryptionSecret</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">z01mye6j16bspJYtTB/5SFX8j7Ph4JXxM2Xuu4vsBPM=</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">ca</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">crt</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">&lt;base64 encoded RSA certificate&gt;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">&lt;base64 encoded RSA key&gt;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">apiServer</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>{}<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">controllerManager</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>{}<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">scheduler</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>{}<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">etcd</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">ca</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">crt</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">&lt;base64 encoded RSA certificate&gt;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">&lt;base64 encoded RSA key&gt;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h3 id="config">Config</h3>
+<h4 id="version">version</h4>
+<p>Indicates the schema used to decode the contents.</p>
+<p>Type: <code>string</code></p>
+<p>Valid Values:</p>
+<ul>
+<li><code>v1alpha1</code></li>
+</ul>
+<h4 id="debug">debug</h4>
+<p>Enable verbose logging.</p>
+<p>Type: <code>bool</code></p>
+<p>Valid Values:</p>
+<ul>
+<li><code>true</code></li>
+<li><code>yes</code></li>
+<li><code>false</code></li>
+<li><code>no</code></li>
+</ul>
+<h4 id="persist">persist</h4>
+<p>Indicates whether to pull the machine config upon every boot.</p>
+<p>Type: <code>bool</code></p>
+<p>Valid Values:</p>
+<ul>
+<li><code>true</code></li>
+<li><code>yes</code></li>
+<li><code>false</code></li>
+<li><code>no</code></li>
+</ul>
+<h4 id="machine">machine</h4>
+<p>Provides machine specific configuration options.</p>
+<p>Type: <code>MachineConfig</code></p>
+<h4 id="cluster">cluster</h4>
+<p>Provides cluster specific configuration options.</p>
+<p>Type: <code>ClusterConfig</code></p>
+<hr>
+<h3 id="machineconfig">MachineConfig</h3>
+<h4 id="type">type</h4>
+<p>Defines the role of the machine within the cluster.</p>
+<h5 id="init">Init</h5>
+<p>Init node type designates the first control plane node to come up.
+You can think of it like a bootstrap node.
+This node will perform the initial steps to bootstrap the cluster &ndash; generation of TLS assets, starting of the control plane, etc.</p>
+<h5 id="control-plane">Control Plane</h5>
+<p>Control Plane node type designates the node as a control plane member.
+This means it will host etcd along with the Kubernetes master components such as API Server, Controller Manager, Scheduler.</p>
+<h5 id="worker">Worker</h5>
+<p>Worker node type designates the node as a worker node.
+This means it will be an available compute node for scheduling workloads.</p>
+<p>Type: <code>string</code></p>
+<p>Valid Values:</p>
+<ul>
+<li><code>init</code></li>
+<li><code>controlplane</code></li>
+<li><code>join</code></li>
+</ul>
+<h4 id="token">token</h4>
+<p>The <code>token</code> is used by a machine to join the PKI of the cluster.
+Using this token, a machine will create a certificate signing request (CSR), and request a certificate that will be used as its' identity.</p>
+<p>Type: <code>string</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">token</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">328hom.uqjzh6jnn2eie9oi</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><blockquote>
+<p>Warning: It is important to ensure that this token is correct since a machine&rsquo;s certificate has a short TTL by default</p>
+</blockquote>
+<h4 id="ca">ca</h4>
+<p>The root certificate authority of the PKI.
+It is composed of a base64 encoded <code>crt</code> and <code>key</code>.</p>
+<p>Type: <code>PEMEncodedCertificateAndKey</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">ca</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">crt</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJIekNCMHF...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">LS0tLS1CRUdJTiBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0KTUM...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="certsans">certSANs</h4>
+<p>Extra certificate subject alternative names for the machine&rsquo;s certificate.
+By default, all non-loopback interface IPs are automatically added to the certificate&rsquo;s SANs.</p>
+<p>Type: <code>array</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">certSANs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#0000cf;font-weight:bold">10.0.0.10</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#0000cf;font-weight:bold">172.16.0.10</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#0000cf;font-weight:bold">192.168.0.10</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="kubelet">kubelet</h4>
+<p>Used to provide additional options to the kubelet.</p>
+<p>Type: <code>KubeletConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">kubelet</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">extraArgs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">value</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="network">network</h4>
+<p>Used to configure the machine&rsquo;s network.</p>
+<p>Type: <code>NetworkConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">network</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">hostname</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">worker-1</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">interfaces</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">nameservers</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#0000cf;font-weight:bold">9.8.7.6</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#0000cf;font-weight:bold">8.7.6.5</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="disks">disks</h4>
+<p>Used to partition, format and mount additional disks.
+Since the rootfs is read only with the exception of <code>/var</code>, mounts are only valid if they are under <code>/var</code>.
+Note that the partitioning and formating is done only once, if and only if no existing partitions are found.
+If <code>size:</code> is omitted, the partition is sized to occupy full disk.</p>
+<p>Type: <code>array</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">disks</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#204a87;font-weight:bold">device</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">/dev/sdb</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">partitions</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">mountpoint</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">/var/lib/extra</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">size</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">10000000000</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><blockquote>
+<p>Note: <code>size</code> is in units of bytes.</p>
+</blockquote>
+<h4 id="install">install</h4>
+<p>Used to provide instructions for bare-metal installations.</p>
+<p>Type: <code>InstallConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">install</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">disk</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">/dev/sda</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">extraKernelArgs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#000">option=value</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">docker.io/autonomy/installer:latest</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">bootloader</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">wipe</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">false</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">force</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">false</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="files">files</h4>
+<p>Allows the addition of user specified files.
+The value of <code>op</code> can be <code>create</code>, <code>overwrite</code>, or <code>append</code>.
+In the case of <code>create</code>, <code>path</code> must not exist.
+In the case of <code>overwrite</code>, and <code>append</code>, <code>path</code> must be a valid file.
+If an <code>op</code> value of <code>append</code> is used, the existing file will be appended.
+Note that the file contents are not required to be base64 encoded.</p>
+<p>Type: <code>array</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">files</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#204a87;font-weight:bold">content</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
+</span><span style="color:#8f5902;font-style:italic">      </span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">permissions</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">0666</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">path</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">/tmp/file.txt</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">op</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">append</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><blockquote>
+<p>Note: The specified <code>path</code> is relative to <code>/var</code>.</p>
+</blockquote>
+<h4 id="env">env</h4>
+<p>The <code>env</code> field allows for the addition of environment variables to a machine.
+All environment variables are set on the machine in addition to every service.</p>
+<p>Type: <code>Env</code></p>
+<p>Valid Values:</p>
+<ul>
+<li><code>GRPC_GO_LOG_VERBOSITY_LEVEL</code></li>
+<li><code>GRPC_GO_LOG_SEVERITY_LEVEL</code></li>
+<li><code>http_proxy</code></li>
+<li><code>https_proxy</code></li>
+<li><code>no_proxy</code></li>
+</ul>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">env</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">GRPC_GO_LOG_VERBOSITY_LEVEL</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;99&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">GRPC_GO_LOG_SEVERITY_LEVEL</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">info</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">https_proxy</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">http://SERVER:PORT/</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">env</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">GRPC_GO_LOG_SEVERITY_LEVEL</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">error</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">https_proxy</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">https://USERNAME:PASSWORD@SERVER:PORT/</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">env</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">https_proxy</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">http://DOMAIN\\USERNAME:PASSWORD@SERVER:PORT/</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="time">time</h4>
+<p>Used to configure the machine&rsquo;s time settings.</p>
+<p>Type: <code>TimeConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">time</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">servers</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#000">time.cloudflare.com</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="sysctls">sysctls</h4>
+<p>Used to configure the machine&rsquo;s sysctls.</p>
+<p>Type: <code>map</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">sysctls</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">kernel.domainname</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">talos.dev</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">net.ipv4.ip_forward</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;0&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="registries">registries</h4>
+<p>Used to configure the machine&rsquo;s container image registry mirrors.</p>
+<p>Automatically generates matching CRI configuration for registry mirrors.</p>
+<p>Section <code>mirrors</code> allows to redirect requests for images to non-default registry,
+which might be local registry or caching mirror.</p>
+<p>Section <code>config</code> provides a way to authenticate to the registry with TLS client
+identity, provide registry CA, or authentication information.
+Authentication information has same meaning with the corresponding field in <code>.docker/config.json</code>.</p>
+<p>See also matching configuration for <a href="https://github.com/containerd/cri/blob/master/docs/registry.md">CRI containerd plugin</a>.</p>
+<p>Type: <code>RegistriesConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">registries</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">mirrors</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">docker.io</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">endpoints</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>- <span style="color:#000">https://registry-1.docker.io</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">&#39;*&#39;</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">endpoints</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>- <span style="color:#000">http://some.host:123/</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">config</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#4e9a06">&#34;some.host:123&#34;</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">tls</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">CA</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic"># base64-encoded CA certificate in PEM format</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">clientIdentity</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">cert</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">... </span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic"># base64-encoded client certificate in PEM format</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">... </span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic"># base64-encoded client key in PEM format</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">auth</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">username</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">password</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">auth</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">identityToken</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><hr>
+<h3 id="clusterconfig">ClusterConfig</h3>
+<h4 id="controlplane">controlPlane</h4>
+<p>Provides control plane specific configuration options.</p>
+<p>Type: <code>ControlPlaneConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">controlPlane</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">endpoint</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">https://1.2.3.4</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">localAPIServerPort</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">443</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="clustername">clusterName</h4>
+<p>Configures the cluster&rsquo;s name.</p>
+<p>Type: <code>string</code></p>
+<h4 id="network-1">network</h4>
+<p>Provides cluster network configuration.</p>
+<p>Type: <code>ClusterNetworkConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">network</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">cni</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">name</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">flannel</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">dnsDomain</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">cluster.local</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">podSubnets</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#0000cf;font-weight:bold">10.244.0.0</span><span style="color:#000">/16</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">serviceSubnets</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#0000cf;font-weight:bold">10.96.0.0</span><span style="color:#000">/12</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="token-1">token</h4>
+<p>The <a href="https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/">bootstrap token</a>.</p>
+<p>Type: <code>string</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#000">wlzjyw.bei2zfylhs2by0wd</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="aescbcencryptionsecret">aescbcEncryptionSecret</h4>
+<p>The key used for the <a href="https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/">encryption of secret data at rest</a>.</p>
+<p>Type: <code>string</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#000">z01mye6j16bspJYtTB/5SFX8j7Ph4JXxM2Xuu4vsBPM=</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="ca-1">ca</h4>
+<p>The base64 encoded root certificate authority used by Kubernetes.</p>
+<p>Type: <code>PEMEncodedCertificateAndKey</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">ca</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">crt</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">LS0tLS1CRUdJTiBDRV...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">LS0tLS1CRUdJTiBSU0...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="apiserver">apiServer</h4>
+<p>API server specific configuration options.</p>
+<p>Type: <code>APIServerConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">apiServer</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">extraArgs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">value</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">certSANs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#0000cf;font-weight:bold">1.2.3.4</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#0000cf;font-weight:bold">5.6.7.8</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="controllermanager">controllerManager</h4>
+<p>Controller manager server specific configuration options.</p>
+<p>Type: <code>ControllerManagerConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">controllerManager</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">extraArgs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">value</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="proxy">proxy</h4>
+<p>Kube-proxy server-specific configuration options</p>
+<p>Type: <code>ProxyConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">proxy</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">mode</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">ipvs</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">extraArgs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">value</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="scheduler">scheduler</h4>
+<p>Scheduler server specific configuration options.</p>
+<p>Type: <code>SchedulerConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">scheduler</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">extraArgs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">value</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="etcd">etcd</h4>
+<p>Etcd specific configuration options.</p>
+<p>Type: <code>EtcdConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">etcd</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">ca</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">crt</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">LS0tLS1CRUdJTiBDRV...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">LS0tLS1CRUdJTiBSU0...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="podcheckpointer">podCheckpointer</h4>
+<p>Pod Checkpointer specific configuration options.</p>
+<p>Type: <code>PodCheckpointer</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">podCheckpointer</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="coredns">coreDNS</h4>
+<p>Core DNS specific configuration options.</p>
+<p>Type: <code>CoreDNS</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">coreDNS</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="extramanifests">extraManifests</h4>
+<p>A list of urls that point to additional manifests.
+These will get automatically deployed by bootkube.</p>
+<p>Type: <code>array</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">extraManifests</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#4e9a06">&#34;https://www.mysweethttpserver.com/manifest1.yaml&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#4e9a06">&#34;https://www.mysweethttpserver.com/manifest2.yaml&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="extramanifestheaders">extraManifestHeaders</h4>
+<p>A map of key value pairs that will be added while fetching the ExtraManifests.</p>
+<p>Type: <code>map</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">extraManifestHeaders</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">Token</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;1234567&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">X-ExtraInfo</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">info</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="adminkubeconfig">adminKubeconfig</h4>
+<p>Settings for admin kubeconfig generation.
+Certificate lifetime can be configured.</p>
+<p>Type: <code>AdminKubeconfigConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">adminKubeconfig</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">certLifetime</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">1h</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><hr>
+<h3 id="kubeletconfig">KubeletConfig</h3>
+<h4 id="image">image</h4>
+<p>The <code>image</code> field is an optional reference to an alternative kubelet image.</p>
+<p>Type: <code>string</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">docker.io/&lt;org&gt;/kubelet:latest</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="extraargs">extraArgs</h4>
+<p>The <code>extraArgs</code> field is used to provide additional flags to the kubelet.</p>
+<p>Type: <code>map</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">extraArgs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">value</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="extramounts">extraMounts</h4>
+<p>The <code>extraMounts</code> field is used to add additional mounts to the kubelet container.</p>
+<p>Type: <code>array</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">extraMounts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#204a87;font-weight:bold">source</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">/var/lib/example</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">destination</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">/var/lib/example</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">bind</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">options</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#000">rshared</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#000">ro</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><hr>
+<h3 id="networkconfig">NetworkConfig</h3>
+<h4 id="hostname">hostname</h4>
+<p>Used to statically set the hostname for the host.</p>
+<p>Type: <code>string</code></p>
+<h4 id="interfaces">interfaces</h4>
+<p><code>interfaces</code> is used to define the network interface configuration.
+By default all network interfaces will attempt a DHCP discovery.
+This can be further tuned through this configuration parameter.</p>
+<h5 id="machinenetworkinterfacesinterface">machine.network.interfaces.interface</h5>
+<p>This is the interface name that should be configured.</p>
+<h5 id="machinenetworkinterfacescidr">machine.network.interfaces.cidr</h5>
+<p><code>cidr</code> is used to specify a static IP address to the interface.
+This should be in proper CIDR notation ( <code>192.168.2.5/24</code> ).</p>
+<blockquote>
+<p>Note: This option is mutually exclusive with DHCP.</p>
+</blockquote>
+<h5 id="machinenetworkinterfacesdhcp">machine.network.interfaces.dhcp</h5>
+<p><code>dhcp</code> is used to specify that this device should be configured via DHCP.</p>
+<p>The following DHCP options are supported:</p>
+<ul>
+<li><code>OptionClasslessStaticRoute</code></li>
+<li><code>OptionDomainNameServer</code></li>
+<li><code>OptionDNSDomainSearchList</code></li>
+<li><code>OptionHostName</code></li>
+</ul>
+<blockquote>
+<p>Note: This option is mutually exclusive with CIDR.</p>
+</blockquote>
+<h5 id="machinenetworkinterfacesignore">machine.network.interfaces.ignore</h5>
+<p><code>ignore</code> is used to exclude a specific interface from configuration.
+This parameter is optional.</p>
+<h5 id="machinenetworkinterfacesdummy">machine.network.interfaces.dummy</h5>
+<p><code>dummy</code> is used to specify that this interface should be a virtual-only, dummy interface.
+This parameter is optional.</p>
+<h5 id="machinenetworkinterfacesroutes">machine.network.interfaces.routes</h5>
+<p><code>routes</code> is used to specify static routes that may be necessary.
+This parameter is optional.</p>
+<p>Routes can be repeated and includes a <code>Network</code> and <code>Gateway</code> field.</p>
+<p>Type: <code>array</code></p>
+<h4 id="nameservers">nameservers</h4>
+<p>Used to statically set the nameservers for the host.
+Defaults to <code>1.1.1.1</code> and <code>8.8.8.8</code></p>
+<p>Type: <code>array</code></p>
+<h4 id="extrahostentries">extraHostEntries</h4>
+<p>Allows for extra entries to be added to /etc/hosts file</p>
+<p>Type: <code>array</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">extraHostEntries</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#204a87;font-weight:bold">ip</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">192.168.1.100</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">aliases</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#000">test</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#000">test.domain.tld</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><hr>
+<h3 id="installconfig">InstallConfig</h3>
+<h4 id="disk">disk</h4>
+<p>The disk used to install the bootloader, and ephemeral partitions.</p>
+<p>Type: <code>string</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#000">/dev/sda</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#000">/dev/nvme0</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="extrakernelargs">extraKernelArgs</h4>
+<p>Allows for supplying extra kernel args to the bootloader config.</p>
+<p>Type: <code>array</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">extraKernelArgs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#000">a=b</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="image-1">image</h4>
+<p>Allows for supplying the image used to perform the installation.</p>
+<p>Type: <code>string</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">image</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">docker.io/&lt;org&gt;/installer:latest</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="bootloader">bootloader</h4>
+<p>Indicates if a bootloader should be installed.</p>
+<p>Type: <code>bool</code></p>
+<p>Valid Values:</p>
+<ul>
+<li><code>true</code></li>
+<li><code>yes</code></li>
+<li><code>false</code></li>
+<li><code>no</code></li>
+</ul>
+<h4 id="wipe">wipe</h4>
+<p>Indicates if zeroes should be written to the <code>disk</code> before performing and installation.
+Defaults to <code>true</code>.</p>
+<p>Type: <code>bool</code></p>
+<p>Valid Values:</p>
+<ul>
+<li><code>true</code></li>
+<li><code>yes</code></li>
+<li><code>false</code></li>
+<li><code>no</code></li>
+</ul>
+<h4 id="force">force</h4>
+<p>Indicates if filesystems should be forcefully created.</p>
+<p>Type: <code>bool</code></p>
+<p>Valid Values:</p>
+<ul>
+<li><code>true</code></li>
+<li><code>yes</code></li>
+<li><code>false</code></li>
+<li><code>no</code></li>
+</ul>
+<hr>
+<h3 id="timeconfig">TimeConfig</h3>
+<h4 id="servers">servers</h4>
+<p>Specifies time (ntp) servers to use for setting system time.
+Defaults to <code>pool.ntp.org</code></p>
+<blockquote>
+<p>Note: This parameter only supports a single time server</p>
+</blockquote>
+<p>Type: <code>array</code></p>
+<hr>
+<h3 id="registriesconfig">RegistriesConfig</h3>
+<h4 id="mirrors">mirrors</h4>
+<p>Specifies mirror configuration for each registry.
+This setting allows to use local pull-through caching registires,
+air-gapped installations, etc.</p>
+<p>Registry name is the first segment of image identifier, with &lsquo;docker.io&rsquo;
+being default one.
+Name &lsquo;*&rsquo; catches any registry names not specified explicitly.</p>
+<p>Type: <code>map</code></p>
+<h4 id="config-1">config</h4>
+<p>Specifies TLS &amp; auth configuration for HTTPS image registries.
+Mutual TLS can be enabled with &lsquo;clientIdentity&rsquo; option.</p>
+<p>TLS configuration can be skipped if registry has trusted
+server certificate.</p>
+<p>Type: <code>map</code></p>
+<hr>
+<h3 id="podcheckpointer-1">PodCheckpointer</h3>
+<h4 id="image-2">image</h4>
+<p>The <code>image</code> field is an override to the default pod-checkpointer image.</p>
+<p>Type: <code>string</code></p>
+<hr>
+<h3 id="coredns-1">CoreDNS</h3>
+<h4 id="image-3">image</h4>
+<p>The <code>image</code> field is an override to the default coredns image.</p>
+<p>Type: <code>string</code></p>
+<hr>
+<h3 id="endpoint">Endpoint</h3>
+<hr>
+<h3 id="controlplaneconfig">ControlPlaneConfig</h3>
+<h4 id="endpoint-1">endpoint</h4>
+<p>Endpoint is the canonical controlplane endpoint, which can be an IP address or a DNS hostname.
+It is single-valued, and may optionally include a port number.</p>
+<p>Type: <code>Endpoint</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#000">https://1.2.3.4:443</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="localapiserverport">localAPIServerPort</h4>
+<p>The port that the API server listens on internally.
+This may be different than the port portion listed in the endpoint field above.
+The default is 6443.</p>
+<p>Type: <code>int</code></p>
+<hr>
+<h3 id="apiserverconfig">APIServerConfig</h3>
+<h4 id="image-4">image</h4>
+<p>The container image used in the API server manifest.</p>
+<p>Type: <code>string</code></p>
+<h4 id="extraargs-1">extraArgs</h4>
+<p>Extra arguments to supply to the API server.</p>
+<p>Type: <code>map</code></p>
+<h4 id="certsans-1">certSANs</h4>
+<p>Extra certificate subject alternative names for the API server&rsquo;s certificate.</p>
+<p>Type: <code>array</code></p>
+<hr>
+<h3 id="controllermanagerconfig">ControllerManagerConfig</h3>
+<h4 id="image-5">image</h4>
+<p>The container image used in the controller manager manifest.</p>
+<p>Type: <code>string</code></p>
+<h4 id="extraargs-2">extraArgs</h4>
+<p>Extra arguments to supply to the controller manager.</p>
+<p>Type: <code>map</code></p>
+<hr>
+<h3 id="proxyconfig">ProxyConfig</h3>
+<h4 id="image-6">image</h4>
+<p>The container image used in the kube-proxy manifest.</p>
+<p>Type: <code>string</code></p>
+<h4 id="mode">mode</h4>
+<p>proxy mode of kube-proxy.
+By default, this is &lsquo;iptables&rsquo;.</p>
+<p>Type: <code>string</code></p>
+<h4 id="extraargs-3">extraArgs</h4>
+<p>Extra arguments to supply to kube-proxy.</p>
+<p>Type: <code>map</code></p>
+<hr>
+<h3 id="schedulerconfig">SchedulerConfig</h3>
+<h4 id="image-7">image</h4>
+<p>The container image used in the scheduler manifest.</p>
+<p>Type: <code>string</code></p>
+<h4 id="extraargs-4">extraArgs</h4>
+<p>Extra arguments to supply to the scheduler.</p>
+<p>Type: <code>map</code></p>
+<hr>
+<h3 id="etcdconfig">EtcdConfig</h3>
+<h4 id="image-8">image</h4>
+<p>The container image used to create the etcd service.</p>
+<p>Type: <code>string</code></p>
+<h4 id="ca-2">ca</h4>
+<p>The <code>ca</code> is the root certificate authority of the PKI.
+It is composed of a base64 encoded <code>crt</code> and <code>key</code>.</p>
+<p>Type: <code>PEMEncodedCertificateAndKey</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">ca</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">crt</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJIekNCMHF...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">LS0tLS1CRUdJTiBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0KTUM...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="extraargs-5">extraArgs</h4>
+<p>Extra arguments to supply to etcd.
+Note that the following args are not allowed:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>data-dir</code></li>
+<li><code>initial-cluster-state</code></li>
+<li><code>listen-peer-urls</code></li>
+<li><code>listen-client-urls</code></li>
+<li><code>cert-file</code></li>
+<li><code>key-file</code></li>
+<li><code>trusted-ca-file</code></li>
+<li><code>peer-client-cert-auth</code></li>
+<li><code>peer-cert-file</code></li>
+<li><code>peer-trusted-ca-file</code></li>
+<li><code>peer-key-file</code></li>
+</ul>
+<p>Type: <code>map</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">extraArgs</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">initial-cluster</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">https://1.2.3.4:2380</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">advertise-client-urls</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">https://1.2.3.4:2379</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><hr>
+<h3 id="clusternetworkconfig">ClusterNetworkConfig</h3>
+<h4 id="cni">cni</h4>
+<p>The CNI used.
+Composed of &ldquo;name&rdquo; and &ldquo;url&rdquo;.
+The &ldquo;name&rdquo; key only supports upstream bootkube options of &ldquo;flannel&rdquo; or &ldquo;custom&rdquo;.
+URLs is only used if name is equal to &ldquo;custom&rdquo;.
+URLs should point to a single yaml file that will get deployed.
+Empty struct or any other name will default to bootkube&rsquo;s flannel.</p>
+<p>Type: <code>CNIConfig</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">cni</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">name</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;custom&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">urls</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#4e9a06">&#34;https://www.mysweethttpserver.com/supersecretcni.yaml&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="dnsdomain">dnsDomain</h4>
+<p>The domain used by Kubernetes DNS.
+The default is <code>cluster.local</code></p>
+<p>Type: <code>string</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#000">cluser.local</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="podsubnets">podSubnets</h4>
+<p>The pod subnet CIDR.</p>
+<p>Type: <code>array</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">podSubnets</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#0000cf;font-weight:bold">10.244.0.0</span><span style="color:#000">/16</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="servicesubnets">serviceSubnets</h4>
+<p>The service subnet CIDR.</p>
+<p>Type: <code>array</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">serviceSubnets</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>- <span style="color:#0000cf;font-weight:bold">10.96.0.0</span><span style="color:#000">/12</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><hr>
+<h3 id="cniconfig">CNIConfig</h3>
+<h4 id="name">name</h4>
+<p>Name of CNI to use.</p>
+<p>Type: <code>string</code></p>
+<h4 id="urls">urls</h4>
+<p>URLs containing manifests to apply for CNI.</p>
+<p>Type: <code>array</code></p>
+<hr>
+<h3 id="adminkubeconfigconfig">AdminKubeconfigConfig</h3>
+<h4 id="certlifetime">certLifetime</h4>
+<p>Admin kubeconfig certificate lifetime (default is 1 year).
+Field format accepts any Go time.Duration format (&lsquo;1h&rsquo; for one hour, &lsquo;10m&rsquo; for ten minutes).</p>
+<p>Type: <code>Duration</code></p>
+<hr>
+<h3 id="machinedisk">MachineDisk</h3>
+<h4 id="device">device</h4>
+<p>The name of the disk to use.
+Type: <code>string</code></p>
+<h4 id="partitions">partitions</h4>
+<p>A list of partitions to create on the disk.
+Type: <code>array</code></p>
+<hr>
+<h3 id="diskpartition">DiskPartition</h3>
+<h4 id="size">size</h4>
+<p>The size of the partition in bytes. If <code>size:</code> is omitted, the partition is sized to occupy the full disk.</p>
+<p>Type: <code>uint</code></p>
+<h4 id="mountpoint">mountpoint</h4>
+<p>Where to mount the partition.
+Type: <code>string</code></p>
+<hr>
+<h3 id="machinefile">MachineFile</h3>
+<h4 id="content">content</h4>
+<p>The contents of file.
+Type: <code>string</code></p>
+<h4 id="permissions">permissions</h4>
+<p>The file&rsquo;s permissions in octal.
+Type: <code>FileMode</code></p>
+<h4 id="path">path</h4>
+<p>The path of the file.
+Type: <code>string</code></p>
+<h4 id="op">op</h4>
+<p>The operation to use
+Type: <code>string</code></p>
+<p>Valid Values:</p>
+<ul>
+<li><code>create</code></li>
+<li><code>append</code></li>
+</ul>
+<hr>
+<h3 id="extrahost">ExtraHost</h3>
+<h4 id="ip">ip</h4>
+<p>The IP of the host.
+Type: <code>string</code></p>
+<h4 id="aliases">aliases</h4>
+<p>The host alias.
+Type: <code>array</code></p>
+<hr>
+<h3 id="device-1">Device</h3>
+<h4 id="interface">interface</h4>
+<p>The interface name.
+Type: <code>string</code></p>
+<h4 id="cidr">cidr</h4>
+<p>The CIDR to use.
+Type: <code>string</code></p>
+<h4 id="routes">routes</h4>
+<p>A list of routes associated with the interface.
+Type: <code>array</code></p>
+<h4 id="bond">bond</h4>
+<p>Bond specific options.
+Type: <code>Bond</code></p>
+<h4 id="vlans">vlans</h4>
+<p>VLAN specific options.
+Type: <code>array</code></p>
+<h4 id="mtu">mtu</h4>
+<p>The interface&rsquo;s MTU.
+Type: <code>int</code></p>
+<h4 id="dhcp">dhcp</h4>
+<p>Indicates if DHCP should be used.
+Type: <code>bool</code></p>
+<h4 id="ignore">ignore</h4>
+<p>Indicates if the interface should be ignored.
+Type: <code>bool</code></p>
+<h4 id="dummy">dummy</h4>
+<p>Indicates if the interface is a dummy interface.
+Type: <code>bool</code></p>
+<hr>
+<h3 id="bond-1">Bond</h3>
+<h4 id="interfaces-1">interfaces</h4>
+<p>The interfaces that make up the bond.
+Type: <code>array</code></p>
+<h4 id="arpiptarget">arpIPTarget</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>array</code></p>
+<h4 id="mode-1">mode</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>string</code></p>
+<h4 id="xmithashpolicy">xmitHashPolicy</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>string</code></p>
+<h4 id="lacprate">lacpRate</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>string</code></p>
+<h4 id="adactorsystem">adActorSystem</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>string</code></p>
+<h4 id="arpvalidate">arpValidate</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>string</code></p>
+<h4 id="arpalltargets">arpAllTargets</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>string</code></p>
+<h4 id="primary">primary</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>string</code></p>
+<h4 id="primaryreselect">primaryReselect</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>string</code></p>
+<h4 id="failovermac">failOverMac</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>string</code></p>
+<h4 id="adselect">adSelect</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>string</code></p>
+<h4 id="miimon">miimon</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint32</code></p>
+<h4 id="updelay">updelay</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint32</code></p>
+<h4 id="downdelay">downdelay</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint32</code></p>
+<h4 id="arpinterval">arpInterval</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint32</code></p>
+<h4 id="resendigmp">resendIgmp</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint32</code></p>
+<h4 id="minlinks">minLinks</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint32</code></p>
+<h4 id="lpinterval">lpInterval</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint32</code></p>
+<h4 id="packetsperslave">packetsPerSlave</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint32</code></p>
+<h4 id="numpeernotif">numPeerNotif</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint8</code></p>
+<h4 id="tlbdynamiclb">tlbDynamicLb</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint8</code></p>
+<h4 id="allslavesactive">allSlavesActive</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint8</code></p>
+<h4 id="usecarrier">useCarrier</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>bool</code></p>
+<h4 id="adactorsysprio">adActorSysPrio</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint16</code></p>
+<h4 id="aduserportkey">adUserPortKey</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint16</code></p>
+<h4 id="peernotifydelay">peerNotifyDelay</h4>
+<p>A bond option.
+Please see the official kernel documentation.</p>
+<p>Type: <code>uint32</code></p>
+<hr>
+<h3 id="vlan">Vlan</h3>
+<h4 id="cidr-1">cidr</h4>
+<p>The CIDR to use.
+Type: <code>string</code></p>
+<h4 id="routes-1">routes</h4>
+<p>A list of routes associated with the VLAN.
+Type: <code>array</code></p>
+<h4 id="dhcp-1">dhcp</h4>
+<p>Indicates if DHCP should be used.
+Type: <code>bool</code></p>
+<h4 id="vlanid">vlanId</h4>
+<p>The VLAN&rsquo;s ID.
+Type: <code>uint16</code></p>
+<hr>
+<h3 id="route">Route</h3>
+<h4 id="network-2">network</h4>
+<p>The route&rsquo;s network.
+Type: <code>string</code></p>
+<h4 id="gateway">gateway</h4>
+<p>The route&rsquo;s gateway.
+Type: <code>string</code></p>
+<hr>
+<h3 id="registrymirrorconfig">RegistryMirrorConfig</h3>
+<h4 id="endpoints">endpoints</h4>
+<p>List of endpoints (URLs) for registry mirrors to use.
+Endpoint configures HTTP/HTTPS access mode, host name,
+port and path (if path is not set, it defaults to <code>/v2</code>).</p>
+<p>Type: <code>array</code></p>
+<hr>
+<h3 id="registryconfig">RegistryConfig</h3>
+<h4 id="tls">tls</h4>
+<p>The TLS configuration for this registry.
+Type: <code>RegistryTLSConfig</code></p>
+<h4 id="auth">auth</h4>
+<p>The auth configuration for this registry.
+Type: <code>RegistryAuthConfig</code></p>
+<hr>
+<h3 id="registryauthconfig">RegistryAuthConfig</h3>
+<h4 id="username">username</h4>
+<p>Optional registry authentication.
+The meaning of each field is the same with the corresponding field in .docker/config.json.</p>
+<p>Type: <code>string</code></p>
+<h4 id="password">password</h4>
+<p>Optional registry authentication.
+The meaning of each field is the same with the corresponding field in .docker/config.json.</p>
+<p>Type: <code>string</code></p>
+<h4 id="auth-1">auth</h4>
+<p>Optional registry authentication.
+The meaning of each field is the same with the corresponding field in .docker/config.json.</p>
+<p>Type: <code>string</code></p>
+<h4 id="identitytoken">identityToken</h4>
+<p>Optional registry authentication.
+The meaning of each field is the same with the corresponding field in .docker/config.json.</p>
+<p>Type: <code>string</code></p>
+<hr>
+<h3 id="registrytlsconfig">RegistryTLSConfig</h3>
+<h4 id="clientidentity">clientIdentity</h4>
+<p>Enable mutual TLS authentication with the registry.
+Client certificate and key should be base64-encoded.</p>
+<p>Type: <code>PEMEncodedCertificateAndKey</code></p>
+<p>Examples:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">clientIdentity</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">crt</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJIekNCMHF...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">key</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">LS0tLS1CRUdJTiBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0KTUM...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h4 id="ca-3">ca</h4>
+<p>CA registry certificate to add the list of trusted certificates.
+Certificate should be base64-encoded.</p>
+<p>Type: <code>array</code></p>
+<h4 id="insecureskipverify">insecureSkipVerify</h4>
+<p>Skip TLS server certificate verification (not recommended).</p>
+<p>Type: <code>bool</code></p>
+<hr>
+
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<div class="d-print-none">
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="btn btn-primary mb-4 feedback--answer feedback--answer-yes">Yes</button>
+<button class="btn btn-primary mb-4 feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/USERNAME/REPOSITORY/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/USERNAME/REPOSITORY/issues/new">tell us how we can improve</a>.
+</p>
+</div>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-4 text-xs-center order-sm-2">
+        
+        
+        
+      </div>
+      <div class="col-6 col-sm-4 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Twitter" aria-label="Twitter">
+    <a class="text-white" target="_blank" rel="noopener" href="https://twitter.com/SideroLabs" aria-label="Twitter">
+      <i class="fab fa-twitter"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" rel="noopener" href="https://github.com/talos-systems/talos" aria-label="GitHub">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
+        <small class="text-white">&copy; 2022 Sidero Labs, Inc. All Rights Reserved</small>
+        
+	
+		
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
+    integrity="sha512-UR25UO94eTnCVwjbXozyeVd6ZqpaAE9naiEUBK/A+QDbfSTQFhPGj5lOR6d8tsgbBk84Ggb5A3EkjsOgPRPcKA=="
+    crossorigin="anonymous"></script>
+
+
+
+
+
+<script src='/js/tabpane-persist.js'></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.min.7380160122c24d59789a168af05fcec445fe4e5f2069dd9f3a0c991f10269ae0.js" integrity="sha256-c4AWASLCTVl4mhaK8F/OxEX&#43;Tl8gad2fOgyZHxAmmuA=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+  </body>
+</html>

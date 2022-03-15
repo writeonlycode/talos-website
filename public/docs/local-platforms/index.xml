@@ -1,0 +1,428 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Talos – Local Platforms</title>
+    <link>/docs/local-platforms/</link>
+    <description>Recent content in Local Platforms on Talos</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/local-platforms/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Docker</title>
+      <link>/docs/local-platforms/docker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/local-platforms/docker/</guid>
+      <description>
+        
+        
+        &lt;p&gt;In this guide we will create a Kubernetes cluster in Docker, using a containerized version of Talos.&lt;/p&gt;
+&lt;p&gt;Running Talos in Docker is intended to be used in CI pipelines, and local testing when you need a quick and easy cluster.
+Furthermore, if you are running Talos in production, it provides an excellent way for developers to develop against the same version of Talos.&lt;/p&gt;
+&lt;h2 id=&#34;requirements&#34;&gt;Requirements&lt;/h2&gt;
+&lt;p&gt;The follow are requirements for running Talos in Docker:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Docker 18.03 or greater&lt;/li&gt;
+&lt;li&gt;a recent version of &lt;a href=&#34;https://github.com/talos-systems/talos/releases&#34;&gt;&lt;code&gt;talosctl&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;create-the-cluster&#34;&gt;Create the Cluster&lt;/h2&gt;
+&lt;p&gt;Creating a local cluster is as simple as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl cluster create --wait
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the above finishes successfully, your talosconfig(&lt;code&gt;~/.talos/config&lt;/code&gt;) will be configured to point to the new cluster.&lt;/p&gt;
+&lt;p&gt;If you are running on MacOS, an additional command is required:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl config --endpoints 127.0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Note: Startup times can take up to a minute before the cluster is available.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;retrieve-and-configure-the-kubeconfig&#34;&gt;Retrieve and Configure the &lt;code&gt;kubeconfig&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl kubeconfig .
+kubectl --kubeconfig kubeconfig config set-cluster talos-default --server https://127.0.0.1:6443
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;using-the-cluster&#34;&gt;Using the Cluster&lt;/h2&gt;
+&lt;p&gt;Once the cluster is available, you can make use of &lt;code&gt;talosctl&lt;/code&gt; and &lt;code&gt;kubectl&lt;/code&gt; to interact with the cluster.
+For example, to view current running containers, run &lt;code&gt;talosctl containers&lt;/code&gt; for a list of containers in the &lt;code&gt;system&lt;/code&gt; namespace, or &lt;code&gt;talosctl containers -k&lt;/code&gt; for the &lt;code&gt;k8s.io&lt;/code&gt; namespace.
+To view the logs of a container, use &lt;code&gt;talosctl logs &amp;lt;container&amp;gt;&lt;/code&gt; or &lt;code&gt;talosctl logs -k &amp;lt;container&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;cleaning-up&#34;&gt;Cleaning Up&lt;/h2&gt;
+&lt;p&gt;To cleanup, run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl cluster destroy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Firecracker</title>
+      <link>/docs/local-platforms/firecracker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/local-platforms/firecracker/</guid>
+      <description>
+        
+        
+        &lt;p&gt;In this guide we will create a Kubernetes cluster using Firecracker.&lt;/p&gt;
+&lt;h2 id=&#34;requirements&#34;&gt;Requirements&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Linux&lt;/li&gt;
+&lt;li&gt;a kernel with
+&lt;ul&gt;
+&lt;li&gt;KVM enabled (&lt;code&gt;/dev/kvm&lt;/code&gt; must exist)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CONFIG_NET_SCH_NETEM&lt;/code&gt; enabled&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CONFIG_NET_SCH_INGRESS&lt;/code&gt; enabled&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;at least &lt;code&gt;CAP_SYS_ADMIN&lt;/code&gt; and &lt;code&gt;CAP_NET_ADMIN&lt;/code&gt; capabilities&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/firecracker-microvm/firecracker/releases&#34;&gt;firecracker&lt;/a&gt; (v0.21.0 or higher)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bridge&lt;/code&gt;, &lt;code&gt;static&lt;/code&gt; and &lt;code&gt;firewall&lt;/code&gt; CNI plugins from the &lt;a href=&#34;https://github.com/containernetworking/cni&#34;&gt;standard CNI plugins&lt;/a&gt;, and &lt;code&gt;tc-redirect-tap&lt;/code&gt; CNI plugin from the &lt;a href=&#34;https://github.com/awslabs/tc-redirect-tap&#34;&gt;awslabs tc-redirect-tap&lt;/a&gt; installed to &lt;code&gt;/opt/cni/bin&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;iptables&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/etc/cni/conf.d&lt;/code&gt; directory should exist&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/var/run/netns&lt;/code&gt; directory should exist&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+&lt;h3 id=&#34;how-to-get-firecracker-v0210-or-higher&#34;&gt;How to get firecracker (v0.21.0 or higher)&lt;/h3&gt;
+&lt;p&gt;You can download &lt;code&gt;firecracker&lt;/code&gt; binary via
+&lt;a href=&#34;https://github.com/firecracker-microvm/firecracker/releases&#34;&gt;github.com/firecracker-microvm/firecracker/releases&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/firecracker-microvm/firecracker/releases/download/&amp;lt;version&amp;gt;/firecracker-&amp;lt;version&amp;gt;-&amp;lt;arch&amp;gt; -L -o firecracker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For example version &lt;code&gt;v0.21.1&lt;/code&gt; for &lt;code&gt;linux&lt;/code&gt; platform:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/firecracker-microvm/firecracker/releases/download/v0.21.1/firecracker-v0.21.1-x86_64 -L -o firecracker
+sudo cp firecracker /usr/local/bin
+sudo chmod +x /usr/local/bin/firecracker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;install-talosctl&#34;&gt;Install talosctl&lt;/h3&gt;
+&lt;p&gt;You can download &lt;code&gt;talosctl&lt;/code&gt; and all required binaries via
+&lt;a href=&#34;https://github.com/talos-systems/talos/releases&#34;&gt;github.com/talos-systems/talos/releases&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/talos-systems/talos/releases/download/&amp;lt;version&amp;gt;/talosctl-&amp;lt;platform&amp;gt;-&amp;lt;arch&amp;gt; -L -o talosctl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For example version &lt;code&gt;v0.6.0&lt;/code&gt; for &lt;code&gt;linux&lt;/code&gt; platform:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/talos-systems/talos/releases/download/v0.6.0/talosctl-linux-amd64 -L -o talosctl
+sudo cp talosctl /usr/local/bin
+sudo chmod +x /usr/local/bin/talosctl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;install-bridge-firewall-and-static-required-cni-plugins&#34;&gt;Install bridge, firewall and static required CNI plugins&lt;/h3&gt;
+&lt;p&gt;You can download standard CNI required plugins via
+&lt;a href=&#34;https://github.com/containernetworking/plugins/releases&#34;&gt;github.com/containernetworking/plugins/releases&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/containernetworking/plugins/releases/download/&amp;lt;version&amp;gt;/cni-plugins-&amp;lt;platform&amp;gt;-&amp;lt;arch&amp;gt;-&amp;lt;version&amp;gt;tgz -L -o cni-plugins-&amp;lt;platform&amp;gt;-&amp;lt;arch&amp;gt;-&amp;lt;version&amp;gt;.tgz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For example version &lt;code&gt;v0.8.5&lt;/code&gt; for &lt;code&gt;linux&lt;/code&gt; platform:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/containernetworking/plugins/releases/download/v0.8.5/cni-plugins-linux-amd64-v0.8.5.tgz -L -o cni-plugins-linux-amd64-v0.8.5.tgz
+mkdir cni-plugins-linux
+tar -xf cni-plugins-linux-amd64-v0.8.5.tgz -C cni-plugins-linux
+sudo mkdir -p /opt/cni/bin
+sudo cp cni-plugins-linux/&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;bridge,firewall,static&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;}&lt;/span&gt; /opt/cni/bin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;install-tc-redirect-tap-cni-plugin&#34;&gt;Install tc-redirect-tap CNI plugin&lt;/h3&gt;
+&lt;p&gt;You should install CNI plugin from the &lt;code&gt;tc-redirect-tap&lt;/code&gt; repository &lt;a href=&#34;https://github.com/awslabs/tc-redirect-tap&#34;&gt;github.com/awslabs/tc-redirect-tap&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;go get -d github.com/awslabs/tc-redirect-tap/cmd/tc-redirect-tap
+&lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/github.com/awslabs/tc-redirect-tap
+make all
+sudo cp tc-redirect-tap /opt/cni/bin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Note: if &lt;code&gt;$GOPATH&lt;/code&gt; is not set, it defaults to &lt;code&gt;~/go&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;install-talos-kernel-and-initramfs&#34;&gt;Install Talos kernel and initramfs&lt;/h2&gt;
+&lt;p&gt;Firecracker provisioner depends on Talos uncompressed kernel (&lt;code&gt;vmlinuz&lt;/code&gt;) and initramfs (&lt;code&gt;initramfs.xz&lt;/code&gt;).
+These files can be downloaded from the Talos release:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir -p _out/
+curl https://github.com/talos-systems/talos/releases/download/&amp;lt;version&amp;gt;/vmlinuz -L -o _out/vmlinuz
+curl https://github.com/talos-systems/talos/releases/download/&amp;lt;version&amp;gt;/initramfs.xz -L -o _out/initramfs.xz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For example version &lt;code&gt;v0.6.0&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/talos-systems/talos/releases/download/v0.6.0/vmlinuz -L -o _out/vmlinuz
+curl https://github.com/talos-systems/talos/releases/download/v0.6.0/initramfs.xz -L -o _out/initramfs.xz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;create-the-cluster&#34;&gt;Create the Cluster&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo talosctl cluster create --provisioner firecracker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the above finishes successfully, your talosconfig(&lt;code&gt;~/.talos/config&lt;/code&gt;) will be configured to point to the new cluster.&lt;/p&gt;
+&lt;h2 id=&#34;retrieve-and-configure-the-kubeconfig&#34;&gt;Retrieve and Configure the &lt;code&gt;kubeconfig&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl kubeconfig .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;using-the-cluster&#34;&gt;Using the Cluster&lt;/h2&gt;
+&lt;p&gt;Once the cluster is available, you can make use of &lt;code&gt;talosctl&lt;/code&gt; and &lt;code&gt;kubectl&lt;/code&gt; to interact with the cluster.
+For example, to view current running containers, run &lt;code&gt;talosctl containers&lt;/code&gt; for a list of containers in the &lt;code&gt;system&lt;/code&gt; namespace, or &lt;code&gt;talosctl containers -k&lt;/code&gt; for the &lt;code&gt;k8s.io&lt;/code&gt; namespace.
+To view the logs of a container, use &lt;code&gt;talosctl logs &amp;lt;container&amp;gt;&lt;/code&gt; or &lt;code&gt;talosctl logs -k &amp;lt;container&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;A bridge interface will be created, and assigned the default IP 10.5.0.1.
+Each node will be directly accessible on the subnet specified at cluster creation time.
+A loadbalancer runs on 10.5.0.1 by default, which handles loadbalancing for the Talos, and Kubernetes APIs.&lt;/p&gt;
+&lt;p&gt;You can see a summary of the cluster state by running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ talosctl cluster show --provisioner firecracker
+PROVISIONER       firecracker
+NAME              talos-default
+NETWORK NAME      talos-default
+NETWORK CIDR      10.5.0.0/24
+NETWORK GATEWAY   10.5.0.1
+NETWORK MTU       &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1500&lt;/span&gt;
+
+NODES:
+
+NAME                     TYPE           IP         CPU    RAM      DISK
+talos-default-master-1   Init           10.5.0.2   1.00   1.6 GB   4.3 GB
+talos-default-master-2   ControlPlane   10.5.0.3   1.00   1.6 GB   4.3 GB
+talos-default-master-3   ControlPlane   10.5.0.4   1.00   1.6 GB   4.3 GB
+talos-default-worker-1   Join           10.5.0.5   1.00   1.6 GB   4.3 GB
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;cleaning-up&#34;&gt;Cleaning Up&lt;/h2&gt;
+&lt;p&gt;To cleanup, run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo talosctl cluster destroy --provisioner firecracker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Note: In that case that the host machine is rebooted before destroying the cluster, you may need to manually remove &lt;code&gt;~/.talos/clusters/talos-default&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;manual-clean-up&#34;&gt;Manual Clean Up&lt;/h2&gt;
+&lt;p&gt;The &lt;code&gt;talosctl cluster destroy&lt;/code&gt; command depends heavily on the clusters state directory.
+It contains all related information of the cluster.
+The PIDs and network associated with the cluster nodes.&lt;/p&gt;
+&lt;p&gt;If you happened to have deleted the state folder by mistake or you would like to cleanup
+the environment, here are the steps how to do it manually:&lt;/p&gt;
+&lt;h3 id=&#34;stopping-vms&#34;&gt;Stopping VMs&lt;/h3&gt;
+&lt;p&gt;Find the process of &lt;code&gt;firecracker --api-sock&lt;/code&gt; execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;[f]irecracker --api-sock&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To stop the VMs manually, execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &amp;lt;PID&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Example output, where VMs are running with PIDs &lt;strong&gt;158065&lt;/strong&gt; and &lt;strong&gt;158216&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;[f]irecracker --api-sock&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4&lt;/span&gt; S root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;158065&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157615&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;44&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;264152&lt;/span&gt; -     07:54 ?        00:34:25 firecracker --api-sock /root/.talos/clusters/k8s/k8s-master-1.sock
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4&lt;/span&gt; S root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;158216&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157617&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;18&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;264152&lt;/span&gt; -     07:55 ?        00:14:47 firecracker --api-sock /root/.talos/clusters/k8s/k8s-worker-1.sock
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;158065&lt;/span&gt;
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;158216&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;remove-vms&#34;&gt;Remove VMs&lt;/h3&gt;
+&lt;p&gt;Find the process of &lt;code&gt;talosctl firecracker-launch&lt;/code&gt; execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;talosctl firecracker-launch&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To remove the VMs manually, execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &amp;lt;PID&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Example output, where VMs are running with PIDs &lt;strong&gt;157615&lt;/strong&gt; and &lt;strong&gt;157617&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;[t]alosctl firecracker-launch&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; S root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157615&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2835&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;184934&lt;/span&gt; -     07:53 ?        00:00:00 talosctl firecracker-launch
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; S root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157617&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2835&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;185062&lt;/span&gt; -     07:53 ?        00:00:00 talosctl firecracker-launch
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157615&lt;/span&gt;
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157617&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;remove-load-balancer&#34;&gt;Remove load balancer&lt;/h3&gt;
+&lt;p&gt;Find the process of &lt;code&gt;talosctl loadbalancer-launch&lt;/code&gt; execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;talosctl loadbalancer-launch&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To remove the LB manually, execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &amp;lt;PID&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Example output, where loadbalancer is running with PID &lt;strong&gt;157609&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;[t]alosctl loadbalancer-launch&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4&lt;/span&gt; S root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157609&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2835&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;184998&lt;/span&gt; -     07:53 ?        00:00:07 talosctl loadbalancer-launch --loadbalancer-addr 10.5.0.1 --loadbalancer-upstreams 10.5.0.2
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157609&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;remove-network&#34;&gt;Remove network&lt;/h3&gt;
+&lt;p&gt;This is more tricky part as if you have already deleted the state folder.
+If you didn&amp;rsquo;t then it is written in the &lt;code&gt;state.yaml&lt;/code&gt; in the
+&lt;code&gt;/root/.talos/clusters/&amp;lt;cluster-name&amp;gt;&lt;/code&gt; directory.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo cat /root/.talos/clusters/&amp;lt;cluster-name&amp;gt;/state.yaml &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep bridgename
+bridgename: talos&amp;lt;uuid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you only had one cluster, then it will be the interface with name
+&lt;code&gt;talos&amp;lt;uuid&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;46: talos&amp;lt;uuid&amp;gt;: &amp;lt;NO-CARRIER,BROADCAST,MULTICAST,UP&amp;gt; mtu &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1500&lt;/span&gt; qdisc noqueue state DOWN group default qlen &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1000&lt;/span&gt;
+    link/ether a6:72:f4:0a:d3:9c brd ff:ff:ff:ff:ff:ff
+    inet 10.5.0.1/24 brd 10.5.0.255 scope global talos17c13299
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a472:f4ff:fe0a:d39c/64 scope link
+       valid_lft forever preferred_lft forever
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To remove this interface:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo ip link del talos&amp;lt;uuid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;remove-state-directory&#34;&gt;Remove state directory&lt;/h3&gt;
+&lt;p&gt;To remove the state directory execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo rm -Rf /root/.talos/clusters/&amp;lt;cluster-name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;troubleshooting&#34;&gt;Troubleshooting&lt;/h2&gt;
+&lt;h3 id=&#34;logs&#34;&gt;Logs&lt;/h3&gt;
+&lt;p&gt;Inspect logs directory&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo cat /root/.talos/clusters/&amp;lt;cluster-name&amp;gt;/*.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Logs are saved under &lt;code&gt;&amp;lt;cluster-name&amp;gt;-&amp;lt;role&amp;gt;-&amp;lt;node-id&amp;gt;.log&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;For example in case of &lt;strong&gt;k8s&lt;/strong&gt; cluster name:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo ls -la /root/.talos/clusters/k8s &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep log
+-rw-r--r--. &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; root root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;69415&lt;/span&gt; Apr &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;26&lt;/span&gt; 20:58 k8s-master-1.log
+-rw-r--r--. &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; root root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;68345&lt;/span&gt; Apr &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;26&lt;/span&gt; 20:58 k8s-worker-1.log
+-rw-r--r--. &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; root root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;24621&lt;/span&gt; Apr &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;26&lt;/span&gt; 20:59 lb.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Inspect logs during the installation&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo su -
+tail -f /root/.talos/clusters/&amp;lt;cluster-name&amp;gt;/*.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;post-installation&#34;&gt;Post-installation&lt;/h2&gt;
+&lt;p&gt;After executing these steps and you should be able to use &lt;code&gt;kubectl&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo talosctl kubeconfig .
+mv kubeconfig &lt;span style=&#34;color:#000&#34;&gt;$HOME&lt;/span&gt;/.kube/config
+sudo chown &lt;span style=&#34;color:#000&#34;&gt;$USER&lt;/span&gt;:&lt;span style=&#34;color:#000&#34;&gt;$USER&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$HOME&lt;/span&gt;/.kube/config
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: QEMU</title>
+      <link>/docs/local-platforms/qemu/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/local-platforms/qemu/</guid>
+      <description>
+        
+        
+        &lt;p&gt;In this guide we will create a Kubernetes cluster using QEMU.&lt;/p&gt;
+&lt;h2 id=&#34;requirements&#34;&gt;Requirements&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Linux&lt;/li&gt;
+&lt;li&gt;a kernel with
+&lt;ul&gt;
+&lt;li&gt;KVM enabled (&lt;code&gt;/dev/kvm&lt;/code&gt; must exist)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CONFIG_NET_SCH_NETEM&lt;/code&gt; enabled&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CONFIG_NET_SCH_INGRESS&lt;/code&gt; enabled&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;at least &lt;code&gt;CAP_SYS_ADMIN&lt;/code&gt; and &lt;code&gt;CAP_NET_ADMIN&lt;/code&gt; capabilities&lt;/li&gt;
+&lt;li&gt;QEMU&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bridge&lt;/code&gt;, &lt;code&gt;static&lt;/code&gt; and &lt;code&gt;firewall&lt;/code&gt; CNI plugins from the &lt;a href=&#34;https://github.com/containernetworking/cni&#34;&gt;standard CNI plugins&lt;/a&gt;, and &lt;code&gt;tc-redirect-tap&lt;/code&gt; CNI plugin from the &lt;a href=&#34;https://github.com/awslabs/tc-redirect-tap&#34;&gt;awslabs tc-redirect-tap&lt;/a&gt; installed to &lt;code&gt;/opt/cni/bin&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;iptables&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/etc/cni/conf.d&lt;/code&gt; directory should exist&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/var/run/netns&lt;/code&gt; directory should exist&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+&lt;h3 id=&#34;how-to-get-qemu&#34;&gt;How to get QEMU&lt;/h3&gt;
+&lt;p&gt;Install QEMU with your operating system package manager.
+For example, on Ubuntu for x86:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;apt install qemu-system-x86 qemu-kvm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;install-talosctl&#34;&gt;Install talosctl&lt;/h3&gt;
+&lt;p&gt;You can download &lt;code&gt;talosctl&lt;/code&gt; and all required binaries via
+&lt;a href=&#34;https://github.com/talos-systems/talos/releases&#34;&gt;github.com/talos-systems/talos/releases&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/talos-systems/talos/releases/download/&amp;lt;version&amp;gt;/talosctl-&amp;lt;platform&amp;gt;-&amp;lt;arch&amp;gt; -L -o talosctl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For example version &lt;code&gt;v0.6.0&lt;/code&gt; for &lt;code&gt;linux&lt;/code&gt; platform:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/talos-systems/talos/releases/download/v0.6.0/talosctl-linux-amd64 -L -o talosctl
+sudo cp talosctl /usr/local/bin
+sudo chmod +x /usr/local/bin/talosctl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;install-bridge-firewall-and-static-required-cni-plugins&#34;&gt;Install bridge, firewall and static required CNI plugins&lt;/h3&gt;
+&lt;p&gt;You can download standard CNI required plugins via
+&lt;a href=&#34;https://github.com/containernetworking/plugins/releases&#34;&gt;github.com/containernetworking/plugins/releases&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/containernetworking/plugins/releases/download/&amp;lt;version&amp;gt;/cni-plugins-&amp;lt;platform&amp;gt;-&amp;lt;arch&amp;gt;-&amp;lt;version&amp;gt;tgz -L -o cni-plugins-&amp;lt;platform&amp;gt;-&amp;lt;arch&amp;gt;-&amp;lt;version&amp;gt;.tgz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For example version &lt;code&gt;v0.8.5&lt;/code&gt; for &lt;code&gt;linux&lt;/code&gt; platform:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/containernetworking/plugins/releases/download/v0.8.5/cni-plugins-linux-amd64-v0.8.5.tgz -L -o cni-plugins-linux-amd64-v0.8.5.tgz
+mkdir cni-plugins-linux
+tar -xf cni-plugins-linux-amd64-v0.8.5.tgz -C cni-plugins-linux
+sudo mkdir -p /opt/cni/bin
+sudo cp cni-plugins-linux/&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;bridge,firewall,static&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;}&lt;/span&gt; /opt/cni/bin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;install-tc-redirect-tap-cni-plugin&#34;&gt;Install tc-redirect-tap CNI plugin&lt;/h3&gt;
+&lt;p&gt;You should install CNI plugin from the &lt;code&gt;tc-redirect-tap&lt;/code&gt; repository &lt;a href=&#34;https://github.com/awslabs/tc-redirect-tap&#34;&gt;github.com/awslabs/tc-redirect-tap&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;go get -d github.com/awslabs/tc-redirect-tap/cmd/tc-redirect-tap
+&lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; &lt;span style=&#34;color:#000&#34;&gt;$GOPATH&lt;/span&gt;/src/github.com/awslabs/tc-redirect-tap
+make all
+sudo cp tc-redirect-tap /opt/cni/bin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Note: if &lt;code&gt;$GOPATH&lt;/code&gt; is not set, it defaults to &lt;code&gt;~/go&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;install-talos-kernel-and-initramfs&#34;&gt;Install Talos kernel and initramfs&lt;/h2&gt;
+&lt;p&gt;QEMU provisioner depends on Talos kernel (&lt;code&gt;vmlinuz&lt;/code&gt;) and initramfs (&lt;code&gt;initramfs.xz&lt;/code&gt;).
+These files can be downloaded from the Talos release:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir -p _out/
+curl https://github.com/talos-systems/talos/releases/download/&amp;lt;version&amp;gt;/vmlinuz -L -o _out/vmlinuz
+curl https://github.com/talos-systems/talos/releases/download/&amp;lt;version&amp;gt;/initramfs.xz -L -o _out/initramfs.xz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For example version &lt;code&gt;v0.6.0&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl https://github.com/talos-systems/talos/releases/download/v0.6.0/vmlinuz -L -o _out/vmlinuz
+curl https://github.com/talos-systems/talos/releases/download/v0.6.0/initramfs.xz -L -o _out/initramfs.xz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;create-the-cluster&#34;&gt;Create the Cluster&lt;/h2&gt;
+&lt;p&gt;For the first time, create root state directory as your user so that you can inspect the logs as non-root user:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir -p ~/.talos/clusters
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Create the cluster:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo -E talosctl cluster create --provisioner qemu
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the above finishes successfully, your talosconfig(&lt;code&gt;~/.talos/config&lt;/code&gt;) will be configured to point to the new cluster.&lt;/p&gt;
+&lt;h2 id=&#34;retrieve-and-configure-the-kubeconfig&#34;&gt;Retrieve and Configure the &lt;code&gt;kubeconfig&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;talosctl -n 10.5.0.2 kubeconfig .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;using-the-cluster&#34;&gt;Using the Cluster&lt;/h2&gt;
+&lt;p&gt;Once the cluster is available, you can make use of &lt;code&gt;talosctl&lt;/code&gt; and &lt;code&gt;kubectl&lt;/code&gt; to interact with the cluster.
+For example, to view current running containers, run &lt;code&gt;talosctl containers&lt;/code&gt; for a list of containers in the &lt;code&gt;system&lt;/code&gt; namespace, or &lt;code&gt;talosctl containers -k&lt;/code&gt; for the &lt;code&gt;k8s.io&lt;/code&gt; namespace.
+To view the logs of a container, use &lt;code&gt;talosctl logs &amp;lt;container&amp;gt;&lt;/code&gt; or &lt;code&gt;talosctl logs -k &amp;lt;container&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;A bridge interface will be created, and assigned the default IP 10.5.0.1.
+Each node will be directly accessible on the subnet specified at cluster creation time.
+A loadbalancer runs on 10.5.0.1 by default, which handles loadbalancing for the Talos, and Kubernetes APIs.&lt;/p&gt;
+&lt;p&gt;You can see a summary of the cluster state by running:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ talosctl cluster show --provisioner qemu
+PROVISIONER       qemu
+NAME              talos-default
+NETWORK NAME      talos-default
+NETWORK CIDR      10.5.0.0/24
+NETWORK GATEWAY   10.5.0.1
+NETWORK MTU       &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1500&lt;/span&gt;
+
+NODES:
+
+NAME                     TYPE           IP         CPU    RAM      DISK
+talos-default-master-1   Init           10.5.0.2   1.00   1.6 GB   4.3 GB
+talos-default-master-2   ControlPlane   10.5.0.3   1.00   1.6 GB   4.3 GB
+talos-default-master-3   ControlPlane   10.5.0.4   1.00   1.6 GB   4.3 GB
+talos-default-worker-1   Join           10.5.0.5   1.00   1.6 GB   4.3 GB
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;cleaning-up&#34;&gt;Cleaning Up&lt;/h2&gt;
+&lt;p&gt;To cleanup, run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo -E talosctl cluster destroy --provisioner qemu
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Note: In that case that the host machine is rebooted before destroying the cluster, you may need to manually remove &lt;code&gt;~/.talos/clusters/talos-default&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;manual-clean-up&#34;&gt;Manual Clean Up&lt;/h2&gt;
+&lt;p&gt;The &lt;code&gt;talosctl cluster destroy&lt;/code&gt; command depends heavily on the clusters state directory.
+It contains all related information of the cluster.
+The PIDs and network associated with the cluster nodes.&lt;/p&gt;
+&lt;p&gt;If you happened to have deleted the state folder by mistake or you would like to cleanup
+the environment, here are the steps how to do it manually:&lt;/p&gt;
+&lt;h3 id=&#34;remove-vm-launchers&#34;&gt;Remove VM Launchers&lt;/h3&gt;
+&lt;p&gt;Find the process of &lt;code&gt;talosctl qemu-launch&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;talosctl qemu-launch&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To remove the VMs manually, execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &amp;lt;PID&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Example output, where VMs are running with PIDs &lt;strong&gt;157615&lt;/strong&gt; and &lt;strong&gt;157617&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;[t]alosctl qemu-launch&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; S root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157615&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2835&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;184934&lt;/span&gt; -     07:53 ?        00:00:00 talosctl qemu-launch
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; S root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157617&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2835&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;185062&lt;/span&gt; -     07:53 ?        00:00:00 talosctl qemu-launch
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157615&lt;/span&gt;
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157617&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;stopping-vms&#34;&gt;Stopping VMs&lt;/h3&gt;
+&lt;p&gt;Find the process of &lt;code&gt;qemu-system&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;qemu-system&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To stop the VMs manually, execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &amp;lt;PID&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Example output, where VMs are running with PIDs &lt;strong&gt;158065&lt;/strong&gt; and &lt;strong&gt;158216&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep qemu-system
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt; S root     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1061663&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1061168&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;26&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1786238&lt;/span&gt; -    14:05 ?        01:53:56 qemu-system-x86_64 -m &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2048&lt;/span&gt; -drive &lt;span style=&#34;color:#000&#34;&gt;format&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;raw,if&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;virtio,file&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;/home/username/.talos/clusters/talos-default/bootstrap-master.disk -smp &lt;span style=&#34;color:#000&#34;&gt;cpus&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt; -cpu max -nographic -netdev tap,id&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;net0,ifname&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;tap0,script&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;no,downscript&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;no -device virtio-net-pci,netdev&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;net0,mac&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;1e:86:c6:b4:7c:c4 -device virtio-rng-pci -no-reboot -boot &lt;span style=&#34;color:#000&#34;&gt;order&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;cn,reboot-timeout&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;5000&lt;/span&gt; -smbios &lt;span style=&#34;color:#000&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;1,uuid&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;7ec0a73c-826e-4eeb-afd1-39ff9f9160ca -machine q35,accel&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;kvm
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt; S root     &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1061663&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1061170&lt;/span&gt; &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;67&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;621014&lt;/span&gt; -     21:23 ?        00:00:07 qemu-system-x86_64 -m &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2048&lt;/span&gt; -drive &lt;span style=&#34;color:#000&#34;&gt;format&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;raw,if&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;virtio,file&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;/homeusername/.talos/clusters/talos-default/pxe-1.disk -smp &lt;span style=&#34;color:#000&#34;&gt;cpus&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2&lt;/span&gt; -cpu max -nographic -netdev tap,id&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;net0,ifname&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;tap0,script&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;no,downscript&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;no -device virtio-net-pci,netdev&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;net0,mac&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;36:f3:2f:c3:9f:06 -device virtio-rng-pci -no-reboot -boot &lt;span style=&#34;color:#000&#34;&gt;order&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;cn,reboot-timeout&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;5000&lt;/span&gt; -smbios &lt;span style=&#34;color:#000&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;1,uuid&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;ce12a0d0-29c8-490f-b935-f6073ab916a6 -machine q35,accel&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;kvm
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1061663&lt;/span&gt;
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1061663&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;remove-load-balancer&#34;&gt;Remove load balancer&lt;/h3&gt;
+&lt;p&gt;Find the process of &lt;code&gt;talosctl loadbalancer-launch&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;talosctl loadbalancer-launch&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To remove the LB manually, execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &amp;lt;PID&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Example output, where loadbalancer is running with PID &lt;strong&gt;157609&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;[t]alosctl loadbalancer-launch&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4&lt;/span&gt; S root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157609&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2835&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;184998&lt;/span&gt; -     07:53 ?        00:00:07 talosctl loadbalancer-launch --loadbalancer-addr 10.5.0.1 --loadbalancer-upstreams 10.5.0.2
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157609&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;remove-dhcp-server&#34;&gt;Remove DHCP server&lt;/h3&gt;
+&lt;p&gt;Find the process of &lt;code&gt;talosctl dhcpd-launch&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;talosctl dhcpd-launch&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To remove the LB manually, execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &amp;lt;PID&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Example output, where loadbalancer is running with PID &lt;strong&gt;157609&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ps -elf &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;[t]alosctl dhcpd-launch&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;4&lt;/span&gt; S root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157609&lt;/span&gt;    &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2835&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt;  &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;   &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;0&lt;/span&gt; - &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;184998&lt;/span&gt; -     07:53 ?        00:00:07 talosctl dhcpd-launch --state-path /home/username/.talos/clusters/talos-default --addr 10.5.0.1 --interface talosbd9c32bc
+sudo &lt;span style=&#34;color:#204a87&#34;&gt;kill&lt;/span&gt; -s SIGTERM &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;157609&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;remove-network&#34;&gt;Remove network&lt;/h3&gt;
+&lt;p&gt;This is more tricky part as if you have already deleted the state folder.
+If you didn&amp;rsquo;t then it is written in the &lt;code&gt;state.yaml&lt;/code&gt; in the
+&lt;code&gt;~/.talos/clusters/&amp;lt;cluster-name&amp;gt;&lt;/code&gt; directory.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo cat ~/.talos/clusters/&amp;lt;cluster-name&amp;gt;/state.yaml &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep bridgename
+bridgename: talos&amp;lt;uuid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you only had one cluster, then it will be the interface with name
+&lt;code&gt;talos&amp;lt;uuid&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;46: talos&amp;lt;uuid&amp;gt;: &amp;lt;NO-CARRIER,BROADCAST,MULTICAST,UP&amp;gt; mtu &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1500&lt;/span&gt; qdisc noqueue state DOWN group default qlen &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1000&lt;/span&gt;
+    link/ether a6:72:f4:0a:d3:9c brd ff:ff:ff:ff:ff:ff
+    inet 10.5.0.1/24 brd 10.5.0.255 scope global talos17c13299
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a472:f4ff:fe0a:d39c/64 scope link
+       valid_lft forever preferred_lft forever
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To remove this interface:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo ip link del talos&amp;lt;uuid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;remove-state-directory&#34;&gt;Remove state directory&lt;/h3&gt;
+&lt;p&gt;To remove the state directory execute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo rm -Rf /home/&lt;span style=&#34;color:#000&#34;&gt;$USER&lt;/span&gt;/.talos/clusters/&amp;lt;cluster-name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;troubleshooting&#34;&gt;Troubleshooting&lt;/h2&gt;
+&lt;h3 id=&#34;logs&#34;&gt;Logs&lt;/h3&gt;
+&lt;p&gt;Inspect logs directory&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo cat ~/.talos/clusters/&amp;lt;cluster-name&amp;gt;/*.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Logs are saved under &lt;code&gt;&amp;lt;cluster-name&amp;gt;-&amp;lt;role&amp;gt;-&amp;lt;node-id&amp;gt;.log&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;For example in case of &lt;strong&gt;k8s&lt;/strong&gt; cluster name:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ls -la ~/.talos/clusters/k8s &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; grep log
+-rw-r--r--. &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; root root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;69415&lt;/span&gt; Apr &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;26&lt;/span&gt; 20:58 k8s-master-1.log
+-rw-r--r--. &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; root root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;68345&lt;/span&gt; Apr &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;26&lt;/span&gt; 20:58 k8s-worker-1.log
+-rw-r--r--. &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt; root root      &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;24621&lt;/span&gt; Apr &lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;26&lt;/span&gt; 20:59 lb.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Inspect logs during the installation&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;tail -f ~/.talos/clusters/&amp;lt;cluster-name&amp;gt;/*.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      </description>
+    </item>
+    
+  </channel>
+</rss>
