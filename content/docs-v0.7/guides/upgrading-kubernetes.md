@@ -252,7 +252,7 @@ spec:
 
 The Talos team now maintains an image for the `kubelet` that should be used starting with Kubernetes 1.19.
 The image for this release is `ghcr.io/talos-systems/kubelet:v1.19.3`.
-To explicitly set the image, we can use the [official documentation](/v0.7/en/configuration/v1alpha1#kubelet).
+To explicitly set the image, we can use the [official documentation](/.../../configuration/v1alpha1#kubelet).
 For example:
 
 ```yaml

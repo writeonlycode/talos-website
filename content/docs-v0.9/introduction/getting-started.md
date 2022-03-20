@@ -4,7 +4,7 @@ weight: 3
 ---
 
 This document will walk you through installing a full Talos Cluster.
-You may wish to read through the [Quickstart](https://talos.dev/docs/v0.9/introduction/quickstart/) first, to quickly create a local virtual cluster on your workstation.
+You may wish to read through the [Quickstart](../../introduction/quickstart/) first, to quickly create a local virtual cluster on your workstation.
 
 Regardless of where you run Talos, you will find that there is a pattern to deploying it.
 
@@ -55,7 +55,7 @@ Thus, it is safe to boot the ISO onto any machine.
 If you wish to use a different boot mechanism (such as network boot or a custom ISO), there
 are a number of required kernel parameters.
 
-Please see the [kernel](https://talos.dev/docs/v0.9/reference/kernel/) docs for more information.
+Please see the [kernel](../../reference/kernel/) docs for more information.
 
 ## Decide the Kubernetes Endpoint
 

@@ -2,7 +2,7 @@
 	{{ .Site.Params.version_menu }}
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-	{{ range .Site.Params.versions }}
+	{{ range sort .Site.Params.versions }}
 	<a class="dropdown-item" href="{{ .url }}">{{ .version }}</a>
 	{{ end }}
 </div>
