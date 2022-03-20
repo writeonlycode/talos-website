@@ -144,7 +144,7 @@ Once selected, you need to assign to following:
 This will provision the Stage and Bootenv with the talos values.
 Once this is done, you can boot the machine.
 
-To understand the boot process, we have a higher level overview located at [metal overview.](/v0.11/en/guides/metal/overview)
+To understand the boot process, we have a higher level overview located at [metal overview.](/../../guides/metal/overview)
 
 ### Bootstrap Etcd
 

@@ -59,4 +59,4 @@ number of kubernetes clusters from the same workstation.
 
 ## Commands
 
-Please see the [CLI reference](https://www.talos.dev/docs/v0.11/reference/cli/) for the entire list of commands which are available from `talosctl`.
+Please see the [CLI reference](../../reference/cli/) for the entire list of commands which are available from `talosctl`.

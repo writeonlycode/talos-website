@@ -63,4 +63,4 @@ which should be enabled explicitly:
 * [KubeSpan](../../guides/kubespan/)
 
 These features require `.cluster.id` and `.cluster.secret` configuration fields to be set (introduced in Talos 0.12),
-please see the [v0.12 upgrade docs](../../../v0.12/guides/upgrading-talos/) for details.
+please see the [v0.12 upgrade docs](../../../docs-v0.12/guides/upgrading-talos/) for details.

@@ -4,7 +4,7 @@ weight: 3
 ---
 
 This document will walk you through installing a full Talos Cluster.
-You may wish to read through the [Quickstart](https://talos.dev/docs/v0.11/introduction/quickstart/) first, to quickly create a local virtual cluster on your workstation.
+You may wish to read through the [Quickstart](../../introduction/quickstart/) first, to quickly create a local virtual cluster on your workstation.
 
 Regardless of where you run Talos, you will find that there is a pattern to deploying it.
 
